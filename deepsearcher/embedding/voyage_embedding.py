@@ -15,14 +15,14 @@ class VoyageEmbedding(BaseEmbedding):
     https://docs.voyageai.com/embeddings/
     """
 
-    def __init__(self, model_name="voyage-3"):
+    def __init__(self, model_name="voyage-3", **kwargs):
         self.model_name = model_name
         self.voyageai_api_key = os.getenv("VOYAGE_API_KEY")
 
         import voyageai
 
         voyageai.api_key = self.voyageai_api_key
-        self.vo = voyageai.Client()
+        self.vo = voyageai.Client(**kwargs)
 
     def embed_query(self, text: str) -> List[float]:
         """

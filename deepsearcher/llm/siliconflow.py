@@ -7,10 +7,18 @@ class SiliconFlow(BaseLLM):
     """
     https://docs.siliconflow.cn/quickstart
     """
-    def __init__(self, model: str = "deepseek-ai/DeepSeek-V3"):
+    def __init__(self, model: str = "deepseek-ai/DeepSeek-V3", **kwargs):
         from openai import OpenAI as OpenAI_
         self.model = model
-        self.client = OpenAI_(api_key=os.getenv("SILICONFLOW_API_KEY"), base_url="https://api.siliconflow.cn/v1")
+        if "api_key" in kwargs:
+            api_key = kwargs.pop("api_key")
+        else:
+            api_key = os.getenv("SILICONFLOW_API_KEY")
+        if "base_url" in kwargs:
+            base_url = kwargs.pop("base_url")
+        else:
+            base_url = "https://api.siliconflow.cn/v1"
+        self.client = OpenAI_(api_key=api_key, base_url=base_url, **kwargs)
 
 
     def chat(self, messages: List[Dict]) -> ChatResponse:
