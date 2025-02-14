@@ -1,3 +1,4 @@
+import os
 from typing import List
 from openai._types import NOT_GIVEN
 from deepsearcher.embedding.base import BaseEmbedding
@@ -15,7 +16,7 @@ class OpenAIEmbedding(BaseEmbedding):
     https://platform.openai.com/docs/guides/embeddings/use-cases
     """
 
-    def __init__(self, model_name: str = "text-embedding-ada-002"):
+    def __init__(self, model_name: str = "text-embedding-ada-002", **kwargs):
         """
 
         Args:
@@ -26,8 +27,11 @@ class OpenAIEmbedding(BaseEmbedding):
                     'text-embedding-3-large': dimensions from 1024 to 3072, default is 3072,
         """
         from openai import OpenAI
-
-        self.client = OpenAI()
+        if "api_key" in kwargs:
+            api_key = kwargs.pop("api_key")
+        else:
+            api_key = os.getenv("OPENAI_API_KEY")
+        self.client = OpenAI(api_key=api_key, **kwargs)
         self.model_name = model_name
 
     def embed_query(self, text:str, dimensions=NOT_GIVEN) -> List[float]:

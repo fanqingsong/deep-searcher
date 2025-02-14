@@ -1,13 +1,18 @@
+import os
 from typing import Dict, List
 from deepsearcher.llm.base import BaseLLM, ChatResponse
 
 
 class TogetherAI(BaseLLM):
     """https://www.together.ai/"""
-    def __init__(self, model: str = "deepseek-ai/DeepSeek-V3"):
+    def __init__(self, model: str = "deepseek-ai/DeepSeek-V3", **kwargs):
         from together import Together
         self.model = model
-        self.client = Together()
+        if "api_key" in kwargs:
+            api_key = kwargs.pop("api_key")
+        else:
+            api_key = os.getenv("TOGETHER_API_KEY")
+        self.client = Together(api_key=api_key, **kwargs)
 
     def chat(self, messages: List[Dict]) -> ChatResponse:
         response = self.client.chat.completions.create(
