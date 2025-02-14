@@ -147,6 +147,16 @@ deepsearcher --help
 
 ---
 
+## ❓ Q&A
+
+Q1: 
+OSError: We couldn't connect to 'https://huggingface.co' to load this file, couldn't find it in the cached files and it looks like GPTCache/paraphrase-albert-small-v2 is not the path to a directory containing a file named config.json.
+Checkout your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.
+A1: Access huggingface exception, try adding the following environment variable:
+```bash
+export HF_ENDPOINT=https://hf-mirror.com
+```
+
 ## 🔧 Module Support
 
 ### 🔹 Embedding Models
