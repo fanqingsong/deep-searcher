@@ -13,7 +13,7 @@ Retrieved Chunk: {retrieved_chunk}
 
 Is the chunk helpful in answering the any of the questions?
 """
-def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
+async def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
     vector_db = configuration.vector_db
     llm = configuration.llm
     embedding_model = configuration.embedding_model
