@@ -113,11 +113,76 @@ result = query("Write a report about xxx.") # Your question here
     <p> More details about VoyageAI: https://docs.voyageai.com/embeddings/ </p>
 </details>
 
+#### Vector Database Configuration
+<pre><code>config.set_embedding_config("vector_db", "(VectorDBName)", "(Arguments dict)")</code></pre>
+<p>The "VectorDBName" can be one of the following: ["Milvus"] (Under development)</p>
+<p> The "Arguments dict" is a dictionary that contains the necessary arguments for the Vector Database class.</p>
 
+<details>
+  <summary>Example (Milvus)</summary>
+    <pre><code>config.set_embedding_config("vector_db", "Milvus", {"uri": "./milvus.db", "token": ""})</code></pre>
+    <p> More details about Milvus Config:</p>
+    <ul>
+        <li>
+            Setting the <code>uri</code> as a local file, e.g. <code>./milvus.db</code>, is the most convenient method, as it automatically utilizes <a href="https://milvus.io/docs/milvus_lite.md" target="_blank">Milvus Lite</a> to store all data in this file.
+        </li>
+    </ul>
+    <ul>
+      <li>
+          If you have a large-scale dataset, you can set up a more performant Milvus server using 
+          <a href="https://milvus.io/docs/quickstart.md" target="_blank">Docker or Kubernetes</a>. 
+          In this setup, use the server URI, e.g., <code>http://localhost:19530</code>, as your <code>uri</code>.
+        </li>
+    </ul>
+    <ul>
+        <li>
+            If you want to use <a href="https://zilliz.com/cloud" target="_blank">Zilliz Cloud</a>, 
+            the fully managed cloud service for Milvus, adjust the <code>uri</code> and <code>token</code> 
+            according to the <a href="https://docs.zilliz.com/docs/on-zilliz-cloud-console#free-cluster-details" 
+            target="_blank">Public Endpoint and API Key</a> in Zilliz Cloud.
+        </li>
+    </ul>
 
+</details>
 
+#### File Loader Configuration
+<pre><code>config.set_embedding_config("file_loader", "(FileLoaderName)", "(Arguments dict)")</code></pre>
+<p>The "FileLoaderName" can be one of the following: ["PDFLoader", "TextLoader", "UnstructuredLoader"]</p>
+<p> The "Arguments dict" is a dictionary that contains the necessary arguments for the File Loader class.</p>
 
+<details>
+  <summary>Example (Unstructured)</summary>
+    <p> Make sure you have prepared your Unstructured API KEY and API URL as env variables <code>UNSTRUCTURED_API_KEY</code> and <code>UNSTRUCTURED_API_URL</code>.</p>
+    <pre><code>config.set_embedding_config("file_loader", "UnstructuredLoader", {})</code></pre>
+    <p> Currently supported file types: ["pdf"] (Under development) </p>
+    <p> More details about Unstructured: https://docs.unstructured.io/api-reference/api-services/overview </p>
+</details>
 
+#### Web Crawler Configuration
+<pre><code>config.set_embedding_config("web_crawler", "(WebCrawlerName)", "(Arguments dict)")</code></pre>
+<p>The "WebCrawlerName" can be one of the following: ["FireCrawlCrawler", "Crawl4AICrawler", "JinaCrawler"]</p>
+<p> The "Arguments dict" is a dictionary that contains the necessary arguments for the Web Crawler class.</p>
+
+<details>
+  <summary>Example (FireCrawl)</summary>
+    <p> Make sure you have prepared your FireCrawl API KEY as an env variable <code>FIRECRAWL_API_KEY</code>.</p>
+    <pre><code>config.set_embedding_config("web_crawler", "FireCrawlCrawler", {})</code></pre>
+    <p> More details about FireCrawl: https://docs.firecrawl.dev/introduction </p>
+</details>
+
+<details>
+  <summary>Example (Crawl4AI)</summary>
+    <p> Make sure you have run <code>crawl4ai-setup</code> in your environment.</p>
+    <pre><code>config.set_embedding_config("web_crawler", "Crawl4AICrawler", {})</code></pre>
+    <p> More details about Crawl4AI: https://docs.crawl4ai.com/core/quickstart/ </p>
+</details>
+
+<details>
+  <summary>Example (Jina Reader)</summary>
+    <p> Make sure you have prepared your Jina Reader API KEY as an env variable <code>JINA_API_TOKEN</code>.</p>
+    <pre><code>config.set_embedding_config("web_crawler", "JinaCrawler", {})</code></pre>
+    <p> More details about Jina Reader: https://jina.ai/reader/ </p>
+</details>
 
 
 ### Python CLI Mode

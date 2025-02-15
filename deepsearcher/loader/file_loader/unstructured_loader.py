@@ -8,7 +8,8 @@ from deepsearcher.tools import log
 class UnstructuredLoader(BaseLoader):
     def __init__(self):
         self.directory_with_results = "./pdf_processed_outputs"
-        shutil.rmtree(self.directory_with_results)
+        if os.path.exists(self.directory_with_results):
+            shutil.rmtree(self.directory_with_results)
         os.makedirs(self.directory_with_results)
 
     def load_pipeline(self, input_path: str) -> List[Document]:

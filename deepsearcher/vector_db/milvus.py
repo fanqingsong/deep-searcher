@@ -119,6 +119,7 @@ class Milvus(BaseVectorDB):
             ]
         except Exception as e:
             log.critical(f"fail to search data, error info: {e}")
+            return []
 
     def list_collections(self, *args, **kwargs) -> List[CollectionInfo]:
         collection_infos = []
