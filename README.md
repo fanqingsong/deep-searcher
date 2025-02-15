@@ -91,36 +91,36 @@ result = query("Write a report about xxx.") # Your question here
 </details>
 
 #### Embedding Model Configuration
-<pre><code>config.set_embedding_config("embedding", "(EmbeddingModelName)", "(Arguments dict)")</code></pre>
+<pre><code>config.set_provider_config("embedding", "(EmbeddingModelName)", "(Arguments dict)")</code></pre>
 <p>The "EmbeddingModelName" can be one of the following: ["MilvusEmbedding", "OpenAIEmbedding", "VoyageEmbedding"]</p>
 <p> The "Arguments dict" is a dictionary that contains the necessary arguments for the embedding model class.</p>
 
 <details>
   <summary>Example (Pymilvus built-in embedding model)</summary>
-    <pre><code>config.set_embedding_config("embedding", "MilvusEmbedding", {"model": "BAAI/bge-base-en-v1.5"})</code></pre>
+    <pre><code>config.set_provider_config("embedding", "MilvusEmbedding", {"model": "BAAI/bge-base-en-v1.5"})</code></pre>
     <p> More details about Pymilvus: https://milvus.io/docs/embeddings.md </p>
 </details>
 
 <details>
   <summary>Example (OpenAI embedding)</summary>
-    <pre><code>config.set_embedding_config("embedding", "OpenAIEmbedding", {"model": "text-embedding-3-small"})</code></pre>
+    <pre><code>config.set_provider_config("embedding", "OpenAIEmbedding", {"model": "text-embedding-3-small"})</code></pre>
     <p> More details about OpenAI models: https://platform.openai.com/docs/guides/embeddings/use-cases </p>
 </details>
 
 <details>
   <summary>Example (VoyageAI embedding)</summary>
-    <pre><code>config.set_embedding_config("embedding", "VoyageEmbedding", {"model": "voyage-3"})</code></pre>
+    <pre><code>config.set_provider_config("embedding", "VoyageEmbedding", {"model": "voyage-3"})</code></pre>
     <p> More details about VoyageAI: https://docs.voyageai.com/embeddings/ </p>
 </details>
 
 #### Vector Database Configuration
-<pre><code>config.set_embedding_config("vector_db", "(VectorDBName)", "(Arguments dict)")</code></pre>
+<pre><code>config.set_provider_config("vector_db", "(VectorDBName)", "(Arguments dict)")</code></pre>
 <p>The "VectorDBName" can be one of the following: ["Milvus"] (Under development)</p>
 <p> The "Arguments dict" is a dictionary that contains the necessary arguments for the Vector Database class.</p>
 
 <details>
   <summary>Example (Milvus)</summary>
-    <pre><code>config.set_embedding_config("vector_db", "Milvus", {"uri": "./milvus.db", "token": ""})</code></pre>
+    <pre><code>config.set_provider_config("vector_db", "Milvus", {"uri": "./milvus.db", "token": ""})</code></pre>
     <p> More details about Milvus Config:</p>
     <ul>
         <li>
@@ -146,41 +146,41 @@ result = query("Write a report about xxx.") # Your question here
 </details>
 
 #### File Loader Configuration
-<pre><code>config.set_embedding_config("file_loader", "(FileLoaderName)", "(Arguments dict)")</code></pre>
+<pre><code>config.set_provider_config("file_loader", "(FileLoaderName)", "(Arguments dict)")</code></pre>
 <p>The "FileLoaderName" can be one of the following: ["PDFLoader", "TextLoader", "UnstructuredLoader"]</p>
 <p> The "Arguments dict" is a dictionary that contains the necessary arguments for the File Loader class.</p>
 
 <details>
   <summary>Example (Unstructured)</summary>
     <p> Make sure you have prepared your Unstructured API KEY and API URL as env variables <code>UNSTRUCTURED_API_KEY</code> and <code>UNSTRUCTURED_API_URL</code>.</p>
-    <pre><code>config.set_embedding_config("file_loader", "UnstructuredLoader", {})</code></pre>
+    <pre><code>config.set_provider_config("file_loader", "UnstructuredLoader", {})</code></pre>
     <p> Currently supported file types: ["pdf"] (Under development) </p>
     <p> More details about Unstructured: https://docs.unstructured.io/api-reference/api-services/overview </p>
 </details>
 
 #### Web Crawler Configuration
-<pre><code>config.set_embedding_config("web_crawler", "(WebCrawlerName)", "(Arguments dict)")</code></pre>
+<pre><code>config.set_provider_config("web_crawler", "(WebCrawlerName)", "(Arguments dict)")</code></pre>
 <p>The "WebCrawlerName" can be one of the following: ["FireCrawlCrawler", "Crawl4AICrawler", "JinaCrawler"]</p>
 <p> The "Arguments dict" is a dictionary that contains the necessary arguments for the Web Crawler class.</p>
 
 <details>
   <summary>Example (FireCrawl)</summary>
     <p> Make sure you have prepared your FireCrawl API KEY as an env variable <code>FIRECRAWL_API_KEY</code>.</p>
-    <pre><code>config.set_embedding_config("web_crawler", "FireCrawlCrawler", {})</code></pre>
+    <pre><code>config.set_provider_config("web_crawler", "FireCrawlCrawler", {})</code></pre>
     <p> More details about FireCrawl: https://docs.firecrawl.dev/introduction </p>
 </details>
 
 <details>
   <summary>Example (Crawl4AI)</summary>
     <p> Make sure you have run <code>crawl4ai-setup</code> in your environment.</p>
-    <pre><code>config.set_embedding_config("web_crawler", "Crawl4AICrawler", {})</code></pre>
+    <pre><code>config.set_provider_config("web_crawler", "Crawl4AICrawler", {})</code></pre>
     <p> More details about Crawl4AI: https://docs.crawl4ai.com/core/quickstart/ </p>
 </details>
 
 <details>
   <summary>Example (Jina Reader)</summary>
     <p> Make sure you have prepared your Jina Reader API KEY as an env variable <code>JINA_API_TOKEN</code>.</p>
-    <pre><code>config.set_embedding_config("web_crawler", "JinaCrawler", {})</code></pre>
+    <pre><code>config.set_provider_config("web_crawler", "JinaCrawler", {})</code></pre>
     <p> More details about Jina Reader: https://jina.ai/reader/ </p>
 </details>
 
