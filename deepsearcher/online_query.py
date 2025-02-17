@@ -11,7 +11,7 @@ import asyncio
 
 
 # Add a wrapper function to support synchronous calls
-def query(original_query: str, max_iter: int = 3) -> str:
+def query(original_query: str, max_iter: int = 3) -> Tuple[str, List[RetrievalResult]]:
     return asyncio.run(async_query(original_query, max_iter))
 
 
@@ -23,6 +23,10 @@ async def async_query(original_query: str, max_iter: int = 3) -> Tuple[str, List
     log.color_print("\n==== FINAL ANSWER====\n")
     log.color_print(final_answer)
     return final_answer, retrieval_res
+
+
+def retrieve(original_query: str, max_iter: int = 3) -> Tuple[str, List[RetrievalResult]]:
+    return asyncio.run(async_retrieve(original_query, max_iter))
 
 
 async def async_retrieve(original_query: str, max_iter: int = 3) -> Tuple[List[RetrievalResult], List[str]]:
