@@ -21,7 +21,7 @@ class Configuration:
             "embedding": {
                 "provider": "MilvusEmbedding",
                 "config": {
-                    "model_name": "default"
+                    "model": "default"
                 }
             },
             "file_loader": {

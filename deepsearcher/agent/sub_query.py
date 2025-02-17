@@ -1,7 +1,8 @@
 import ast
-from typing import List
+from typing import Tuple, List
 
 from deepsearcher.tools import log
+
 # from deepsearcher.configuration import llm
 from deepsearcher import configuration
 
@@ -25,8 +26,14 @@ Example output:
 
 Provide your response in list of str format:
 """
-def generate_sub_queries(original_query: str) -> List[str]:
+
+
+def generate_sub_queries(original_query: str) -> Tuple[List[str], int]:
     llm = configuration.llm
-    chat_response = llm.chat(messages=[{"role": "user", "content": PROMPT.format(original_query=original_query)}])
+    chat_response = llm.chat(
+        messages=[
+            {"role": "user", "content": PROMPT.format(original_query=original_query)}
+        ]
+    )
     response_content = chat_response.content
-    return llm.literal_eval(response_content)
+    return llm.literal_eval(response_content), chat_response.total_tokens

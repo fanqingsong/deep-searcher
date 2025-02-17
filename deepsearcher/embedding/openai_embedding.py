@@ -16,7 +16,7 @@ class OpenAIEmbedding(BaseEmbedding):
     https://platform.openai.com/docs/guides/embeddings/use-cases
     """
 
-    def __init__(self, model_name: str = "text-embedding-ada-002", **kwargs):
+    def __init__(self, model: str = "text-embedding-ada-002", **kwargs):
         """
 
         Args:
@@ -27,22 +27,37 @@ class OpenAIEmbedding(BaseEmbedding):
                     'text-embedding-3-large': dimensions from 1024 to 3072, default is 3072,
         """
         from openai import OpenAI
+
         if "api_key" in kwargs:
             api_key = kwargs.pop("api_key")
         else:
             api_key = os.getenv("OPENAI_API_KEY")
         self.client = OpenAI(api_key=api_key, **kwargs)
-        self.model_name = model_name
+        if "model_name" in kwargs and (
+            not model or model == "text-embedding-ada-002"
+        ):
+            model = kwargs.pop("model_name")
+        self.model = model
 
-    def embed_query(self, text:str, dimensions=NOT_GIVEN) -> List[float]:
+    def embed_query(self, text: str, dimensions=NOT_GIVEN) -> List[float]:
         # text = text.replace("\n", " ")
-        return self.client.embeddings.create(input=[text], model=self.model_name, dimensions=dimensions).data[0].embedding
+        return (
+            self.client.embeddings.create(
+                input=[text], model=self.model, dimensions=dimensions
+            )
+            .data[0]
+            .embedding
+        )
 
-    def embed_documents(self, texts: List[str], dimensions=NOT_GIVEN) -> List[List[float]]:
-        res = self.client.embeddings.create(input=texts, model=self.model_name, dimensions=dimensions)
+    def embed_documents(
+        self, texts: List[str], dimensions=NOT_GIVEN
+    ) -> List[List[float]]:
+        res = self.client.embeddings.create(
+            input=texts, model=self.model, dimensions=dimensions
+        )
         res = [r.embedding for r in res.data]
         return res
 
     @property
     def dimension(self) -> int:
-        return OPENAI_MODEL_DIM_MAP[self.model_name]
+        return OPENAI_MODEL_DIM_MAP[self.model]
