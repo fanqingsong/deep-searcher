@@ -4,6 +4,7 @@ from deepsearcher.vector_db.base import deduplicate_results
 # from deepsearcher.configuration import vector_db, embedding_model, llm
 from deepsearcher import configuration
 from deepsearcher.tools import log
+import asyncio
 
 
 async def async_query(original_query: str, max_iter: int = 3) -> str:
