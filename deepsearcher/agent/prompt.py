@@ -3,52 +3,17 @@ from typing import List
 
 def get_vector_db_search_prompt(
     question: str,
-    collection_names: List[str],
-    collection_descriptions: List[str],
+    collection_info: List,
     context: List[str] = None,
 ):
-    sections = []
-    # common prompt
-    common_prompt = f"""You are an advanced AI problem analyst. Use your reasoning ability and historical conversation information, based on all the existing data sets, to get absolutely accurate answers to the following questions, and generate a suitable question for each data set according to the data set description that may be related to the question.
+    return f"""
+I provide you with collection_name(s) and corresponding collection_description(s). Please select the collection names that may be related to the question and return a python list of str. If there is no collection related to the question, you can return an empty list.
 
-Question: {question}
+"QUESTION": {question}
+"COLLECTION_INFO": {collection_info}
+
+When you return, you can ONLY return a python list of str, WITHOUT any other additional content. Your selected collection name list is:
 """
-    sections.append(common_prompt)
-    
-    # data set prompt
-    data_set = []
-    for i, collection_name in enumerate(collection_names):
-        data_set.append(f"{collection_name}: {collection_descriptions[i]}")
-    data_set_prompt = f"""The following is all the data set information. The format of data set information is data set name: data set description.
-
-Data Sets And Descriptions:
-"""
-    sections.append(data_set_prompt + "\n".join(data_set))
-    
-    # context prompt
-    if context:
-        context_prompt = f"""The following is a condensed version of the historical conversation. This information needs to be combined in this analysis to generate questions that are closer to the answer. You must not generate the same or similar questions for the same data set, nor can you regenerate questions for data sets that have been determined to be unrelated.
-
-Historical Conversation:
-"""
-        sections.append(context_prompt + "\n".join(context))
-    
-    # response prompt
-    response_prompt = f"""Based on the above, you can only select a few datasets from the following dataset list to generate appropriate related questions for the selected datasets in order to solve the above problems. The output format is json, where the key is the name of the dataset and the value is the corresponding generated question.
-
-Data Sets:
-"""
-    sections.append(response_prompt + "\n".join(collection_names))
-    
-    footer = """Respond exclusively in valid JSON format matching exact JSON schema.
-
-Critical Requirements:
-- Include ONLY ONE action type
-- Never add unsupported keys
-- Exclude all non-JSON text, markdown, or explanations
-- Maintain strict JSON syntax"""
-    sections.append(footer)
-    return "\n\n".join(sections)
 
 
 def get_reflect_prompt(

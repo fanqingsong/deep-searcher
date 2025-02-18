@@ -3,6 +3,9 @@ from deepsearcher.agent import prompt
 from deepsearcher.tools import log
 
 class TestPrompt(unittest.TestCase):
+    def setUp(self):
+        log.set_dev_mode(True)
+    
     def test_search_prompt(self):
         question = "What is the meaning of life?"
         collection_names = [
@@ -16,7 +19,8 @@ class TestPrompt(unittest.TestCase):
             "Collects perspectives on the meaning of life from various cultures and religions, showcasing the differences in their belief systems and values.",
             ]
         context = None
-        p = prompt.get_vector_db_search_prompt(question, collection_names, collection_descriptions, context)
+        collection_info = [{"collection_name": collection_names[i], "collection_description": collection_descriptions[i]} for i in range(len(collection_names))]
+        p = prompt.get_vector_db_search_prompt(question, collection_info, context)
         log.info("\n" + p)
 
         """ prompt llm output example:

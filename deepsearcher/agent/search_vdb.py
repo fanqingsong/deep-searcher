@@ -25,18 +25,23 @@ async def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
     collection_infos = vector_db.list_collections()
     vector_db_search_prompt = get_vector_db_search_prompt(
         question=query,
-        collection_names=[
-            collection_info.collection_name for collection_info in collection_infos
-        ],
-        collection_descriptions=[
-            collection_info.description for collection_info in collection_infos
+        collection_info=[
+            {
+                "collection_name": collection_info.collection_name,
+                "collection_description": collection_info.description,
+            }
+            for collection_info in collection_infos
         ],
     )
     chat_response = llm.chat(
         messages=[{"role": "user", "content": vector_db_search_prompt}]
     )
-    collection_2_query = llm.literal_eval(chat_response.content)
+    llm_collections = llm.literal_eval(chat_response.content)
+    collection_2_query = {}
     consume_tokens += chat_response.total_tokens
+
+    for collection in llm_collections:
+        collection_2_query[collection] = query
 
     for collection_info in collection_infos:
         # If a collection description is not provided, use the query as the search query
@@ -50,7 +55,6 @@ async def search_chunks_from_vectordb(query: str, sub_queries: List[str]):
     )
     all_retrieved_results = []
     for collection, col_query in collection_2_query.items():
-        col_query = query  # TODO col_query seems too verbose, use original query instead, need more tests and prompt refinement
         log.color_print(
             f"<search> Search [{col_query}] in [{collection}]...  </search>\n"
         )
