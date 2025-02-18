@@ -68,7 +68,7 @@ class Milvus(BaseVectorDB):
         except Exception as e:
             log.critical(f"fail to init db for milvus, error info: {e}")
 
-    def insert_data(self, collection: Optional[str], chunks: List[Chunk], *args, **kwargs):
+    def insert_data(self, collection: Optional[str], chunks: List[Chunk], batch_size: int = 256, *args, **kwargs):
         if not collection:
             collection = self.default_collection
         texts = [chunk.text for chunk in chunks]
@@ -76,19 +76,21 @@ class Milvus(BaseVectorDB):
         metadatas = [chunk.metadata for chunk in chunks]
         embeddings = [chunk.embedding for chunk in chunks]
 
+        datas = [
+            {
+                "embedding": embedding,
+                "text": text,
+                "reference": reference,
+                "metadata": metadata,
+            }
+            for embedding, text, reference, metadata in zip(
+                embeddings, texts, references, metadatas
+            )
+        ]
+        batch_datas = [datas[i: i + batch_size] for i in range(0, len(datas), batch_size)]
         try:
-            datas = [
-                {
-                    "embedding": embedding,
-                    "text": text,
-                    "reference": reference,
-                    "metadata": metadata,
-                }
-                for embedding, text, reference, metadata in zip(
-                    embeddings, texts, references, metadatas
-                )
-            ]
-            self.client.insert(collection_name=collection, data=datas)
+            for batch_data in batch_datas:
+                self.client.insert(collection_name=collection, data=batch_data)
         except Exception as e:
             log.critical(f"fail to insert data, error info: {e}")
 
