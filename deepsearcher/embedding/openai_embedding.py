@@ -32,12 +32,12 @@ class OpenAIEmbedding(BaseEmbedding):
             api_key = kwargs.pop("api_key")
         else:
             api_key = os.getenv("OPENAI_API_KEY")
-        self.client = OpenAI(api_key=api_key, **kwargs)
         if "model_name" in kwargs and (
             not model or model == "text-embedding-ada-002"
         ):
             model = kwargs.pop("model_name")
         self.model = model
+        self.client = OpenAI(api_key=api_key, **kwargs)
 
     def embed_query(self, text: str, dimensions=NOT_GIVEN) -> List[float]:
         # text = text.replace("\n", " ")
