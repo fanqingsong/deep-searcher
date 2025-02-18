@@ -27,11 +27,11 @@ Install DeepSearcher using pip:
 git clone https://github.com/zilliztech/deep-searcher.git
 
 # Recommended: Create a Python virtual environment
+cd deep-searcher
 python3 -m venv .venv
 source .venv/bin/activate
 
 # Install dependencies
-cd deep-searcher 
 pip install -e .
 ```
 Prepare your `OPENAI_API_KEY` in your environment variables. If you change the LLM in the configuration, make sure to prepare the corresponding API key.
