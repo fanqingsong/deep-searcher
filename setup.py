@@ -15,6 +15,9 @@ setup(
         'numpy',
         'tqdm',
         'termcolor',
+        'fastapi',
+        'uvicorn',
+        'pydantic-settings'
     ],
     entry_points={
         'console_scripts': ['deepsearcher=deepsearcher.cli:main'],
