@@ -7,4 +7,3 @@ openai
 numpy
 tqdm
 termcolor
-sentence-transformers
