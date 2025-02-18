@@ -15,6 +15,7 @@ setup(
         'numpy',
         'tqdm',
         'termcolor',
+        'sentence-transformers',
     ],
     entry_points={
         'console_scripts': ['deepsearcher=deepsearcher.cli:main'],
