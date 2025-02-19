@@ -20,7 +20,6 @@ def query(
 ) -> Tuple[str, List[RetrievalResult], int]:
     return asyncio.run(async_query(original_query, max_iter))
 
-
 async def async_query(
     original_query: str, max_iter: int = 3
 ) -> Tuple[str, List[RetrievalResult], int]:
