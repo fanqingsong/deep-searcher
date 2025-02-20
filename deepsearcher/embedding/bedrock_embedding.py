@@ -1,6 +1,5 @@
 import os
 from typing import List
-import boto3
 import json
 from deepsearcher.embedding.base import BaseEmbedding
 
@@ -28,6 +27,7 @@ class BedrockEmbedding(BaseEmbedding):
                 Can be one of the following:
                 'amazon.titan-embed-text-v2:0': dimensions include 256, 512, 1024, default is 1024,
         """
+        import boto3
 
         aws_access_key_id = kwargs.pop("aws_access_key_id", os.getenv("AWS_ACCESS_KEY_ID"))
         aws_secret_access_key = kwargs.pop("aws_secret_access_key", os.getenv("AWS_SECRET_ACCESS_KEY"))
