@@ -6,46 +6,21 @@ from deepsearcher.loader.file_loader.base import BaseLoader
 from deepsearcher.loader.web_crawler.base import BaseCrawler
 from deepsearcher.vector_db.base import BaseVectorDB
 
+import yaml
+
 FeatureType = Literal["llm", "embedding", "file_loader", "web_crawler", "vector_db"]
 
 class Configuration:
-    def __init__(self):
+    def __init__(self, config_path: str = "./config.yaml"):
         # Initialize default configurations
-        self.provide_settings = {
-            "llm": {
-                "provider": "OpenAI",#"TogetherAI",
-                "config": {
-                    "model": "gpt-4o-mini" #"gpt-4o"#"deepseek-ai/DeepSeek-V3"
-                }
-            },
-            "embedding": {
-                "provider": "MilvusEmbedding",
-                "config": {
-                    "model": "default"
-                }
-            },
-            "file_loader": {
-                "provider": "PDFLoader",
-                "config": {}
-            },
-            "web_crawler": {
-                "provider": "FireCrawlCrawler",
-                "config": {}
-            },
-            "vector_db": {
-                "provider": "Milvus",
-                "config": {
-                    "uri": "./milvus.db"
-                }
-            }
-        }
-        self.query_settings = {
-            "max_iter": 3
-        }
-        self.load_settings = {
-            "chunk_size": 1500,
-            "chunk_overlap": 100
-        }
+        config_data = self.load_config_from_yaml(config_path)
+        self.provide_settings = config_data['provide_settings']
+        self.query_settings = config_data['query_settings']
+        self.load_settings = config_data['load_settings']
+
+    def load_config_from_yaml(self, config_path: str):
+        with open(config_path, "r") as file:
+            return yaml.safe_load(file)
 
     def set_provider_config(self, feature: FeatureType, provider: str, provider_configs: dict):
         """
