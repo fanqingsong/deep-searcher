@@ -90,6 +90,12 @@ result = query("Write a report about xxx.") # Your question here
     <p> You need to install together before running, execute: <code>pip install together</code>. More details about TogetherAI: https://www.together.ai/ </p>
 </details>
 
+<details>
+  <summary>Example (Google Gemini)</summary>
+  <pre><code>config.set_provider_config('llm', 'Gemini', { 'model': 'gemini-2.0-flash' })</code></pre>
+    <p> You need to install gemini before running, execute: <code>pip install google-genai</code>. More details about TogetherAI: https://ai.google.dev/gemini-api/docs </p>
+</details>
+
 #### Embedding Model Configuration
 <pre><code>config.set_provider_config("embedding", "(EmbeddingModelName)", "(Arguments dict)")</code></pre>
 <p>The "EmbeddingModelName" can be one of the following: ["MilvusEmbedding", "OpenAIEmbedding", "VoyageEmbedding"]</p>
