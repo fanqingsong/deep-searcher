@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Union
 
 import numpy as np
 
@@ -56,7 +56,7 @@ class BaseVectorDB(ABC):
         pass
     
     @abstractmethod
-    def search_data(self, collection: str, vector: np.array | List[float], *args, **kwargs) -> List[RetrievalResult]:
+    def search_data(self, collection: str, vector: Union[np.array, List[float]], *args, **kwargs) -> List[RetrievalResult]:
         pass
 
     def list_collections(self, *args, **kwargs) -> List[CollectionInfo]:

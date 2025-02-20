@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Body, Query
-from typing import List
+from typing import List, Union
 from deepsearcher.configuration import Configuration, init_config
 from deepsearcher.offline_loading import load_from_local_files, load_from_website
 from deepsearcher.online_query import query
@@ -13,7 +13,7 @@ init_config(config)
 
 @app.post("/load-files/")
 def load_files(
-    paths: str | List[str] = Body(..., description="A list of file paths to be loaded.", examples=["/path/to/file1", "/path/to/file2", "/path/to/dir1"]),
+    paths: Union[str, List[str]] = Body(..., description="A list of file paths to be loaded.", examples=["/path/to/file1", "/path/to/file2", "/path/to/dir1"]),
     collection_name: str = Body(None, description="Optional name for the collection.", examples=["my_collection"]),
     collection_description: str = Body(None, description="Optional description for the collection.", examples=["This is a test collection."])
 ):
@@ -25,7 +25,7 @@ def load_files(
 
 @app.post("/load-website/")
 def load_website(
-    urls: str | List[str] = Body(..., description="A list of URLs of websites to be loaded.", examples=["https://milvus.io/docs/overview.md"]),
+    urls: Union[str, List[str]] = Body(..., description="A list of URLs of websites to be loaded.", examples=["https://milvus.io/docs/overview.md"]),
     collection_name: str = Body(None, description="Optional name for the collection.", examples=["my_collection"]),
     collection_description: str = Body(None, description="Optional description for the collection.", examples=["This is a test collection."])
 ):

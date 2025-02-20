@@ -62,37 +62,42 @@ result = query("Write a report about xxx.") # Your question here
 ### Configuration Details:
 #### LLM Configuration
 
-  <pre><code>config.set_provider_config("llm", "(LLMName)", "(Arguments dict)")</code></pre>
-<p>The "LLMName" can be one of the following: ["DeepSeek", "OpenAI", "SiliconFlow", "TogetherAI"]</p>
+<pre><code>config.set_provider_config("llm", "(LLMName)", "(Arguments dict)")</code></pre>
+<p>The "LLMName" can be one of the following: ["DeepSeek", "OpenAI", "SiliconFlow", "TogetherAI", "Gemini"]</p>
 <p> The "Arguments dict" is a dictionary that contains the necessary arguments for the LLM class.</p>
 
 <details>
   <summary>Example (OpenAI)</summary>
+    <p> Make sure you have prepared your OPENAI API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("llm", "OpenAI", {"model": "gpt-4o"})</code></pre>
     <p> More details about OpenAI models: https://platform.openai.com/docs/models </p>
 </details>
 
 <details>
   <summary>Example (DeepSeek from official)</summary>
+    <p> Make sure you have prepared your DEEPSEEK API KEY as an env variable <code>DEEPSEEK_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("llm", "DeepSeek", {"model": "deepseek-chat"})</code></pre>
     <p> More details about DeepSeek: https://api-docs.deepseek.com/ </p>
 </details>
 
 <details>
   <summary>Example (DeepSeek from SiliconFlow)</summary>
+    <p> Make sure you have prepared your SILICONFLOW API KEY as an env variable <code>SILICONFLOW_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("llm", "SiliconFlow", {"model": "deepseek-ai/DeepSeek-V3"})</code></pre>
     <p> More details about SiliconFlow: https://docs.siliconflow.cn/quickstart </p>
 </details>
 
 <details>
   <summary>Example (DeepSeek from TogetherAI)</summary>
+    <p> Make sure you have prepared your TOGETHER API KEY as an env variable <code>TOGETHER_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("llm", "TogetherAI", {"model": "deepseek-ai/DeepSeek-V3"})</code></pre>
     <p> You need to install together before running, execute: <code>pip install together</code>. More details about TogetherAI: https://www.together.ai/ </p>
 </details>
 
 <details>
   <summary>Example (Google Gemini)</summary>
-  <pre><code>config.set_provider_config('llm', 'Gemini', { 'model': 'gemini-2.0-flash' })</code></pre>
+    <p> Make sure you have prepared your GEMINI API KEY as an env variable <code>GEMINI_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config('llm', 'Gemini', { 'model': 'gemini-2.0-flash' })</code></pre>
     <p> You need to install gemini before running, execute: <code>pip install google-genai</code>. More details about TogetherAI: https://ai.google.dev/gemini-api/docs </p>
 </details>
 
@@ -109,12 +114,14 @@ result = query("Write a report about xxx.") # Your question here
 
 <details>
   <summary>Example (OpenAI embedding)</summary>
+    <p> Make sure you have prepared your OpenAI API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("embedding", "OpenAIEmbedding", {"model": "text-embedding-3-small"})</code></pre>
     <p> More details about OpenAI models: https://platform.openai.com/docs/guides/embeddings/use-cases </p>
 </details>
 
 <details>
   <summary>Example (VoyageAI embedding)</summary>
+    <p> Make sure you have prepared your VOYAGE API KEY as an env variable <code>VOYAGE_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("embedding", "VoyageEmbedding", {"model": "voyage-3"})</code></pre>
     <p> You need to install voyageai before running, execute: <code>pip install voyageai</code>. More details about VoyageAI: https://docs.voyageai.com/embeddings/ </p>
 </details>

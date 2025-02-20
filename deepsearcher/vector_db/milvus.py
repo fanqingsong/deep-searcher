@@ -1,5 +1,5 @@
 import numpy as np
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from deepsearcher.loader.splitter import Chunk
 from deepsearcher.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalResult
@@ -22,7 +22,6 @@ class Milvus(BaseVectorDB):
         super().__init__(default_collection)
         self.default_collection = default_collection
         self.client = MilvusClient(uri=uri, token=token, db_name=db, timeout=30)
-
 
     def init_collection(
         self,
@@ -68,7 +67,14 @@ class Milvus(BaseVectorDB):
         except Exception as e:
             log.critical(f"fail to init db for milvus, error info: {e}")
 
-    def insert_data(self, collection: Optional[str], chunks: List[Chunk], batch_size: int = 256, *args, **kwargs):
+    def insert_data(
+        self,
+        collection: Optional[str],
+        chunks: List[Chunk],
+        batch_size: int = 256,
+        *args,
+        **kwargs,
+    ):
         if not collection:
             collection = self.default_collection
         texts = [chunk.text for chunk in chunks]
@@ -87,7 +93,9 @@ class Milvus(BaseVectorDB):
                 embeddings, texts, references, metadatas
             )
         ]
-        batch_datas = [datas[i: i + batch_size] for i in range(0, len(datas), batch_size)]
+        batch_datas = [
+            datas[i : i + batch_size] for i in range(0, len(datas), batch_size)
+        ]
         try:
             for batch_data in batch_datas:
                 self.client.insert(collection_name=collection, data=batch_data)
@@ -95,7 +103,12 @@ class Milvus(BaseVectorDB):
             log.critical(f"fail to insert data, error info: {e}")
 
     def search_data(
-        self, collection: Optional[str], vector: np.array | List[float], top_k: int = 5, *args, **kwargs
+        self,
+        collection: Optional[str],
+        vector: Union[np.array, List[float]],
+        top_k: int = 5,
+        *args,
+        **kwargs,
     ) -> List[RetrievalResult]:
         if not collection:
             collection = self.default_collection
