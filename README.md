@@ -87,7 +87,7 @@ result = query("Write a report about xxx.") # Your question here
 <details>
   <summary>Example (DeepSeek from TogetherAI)</summary>
     <pre><code>config.set_provider_config("llm", "TogetherAI", {"model": "deepseek-ai/DeepSeek-V3"})</code></pre>
-    <p> More details about TogetherAI: https://www.together.ai/ </p>
+    <p> You need to install together before running, execute: <code>pip install together</code>. More details about TogetherAI: https://www.together.ai/ </p>
 </details>
 
 #### Embedding Model Configuration
@@ -110,7 +110,13 @@ result = query("Write a report about xxx.") # Your question here
 <details>
   <summary>Example (VoyageAI embedding)</summary>
     <pre><code>config.set_provider_config("embedding", "VoyageEmbedding", {"model": "voyage-3"})</code></pre>
-    <p> More details about VoyageAI: https://docs.voyageai.com/embeddings/ </p>
+    <p> You need to install voyageai before running, execute: <code>pip install voyageai</code>. More details about VoyageAI: https://docs.voyageai.com/embeddings/ </p>
+</details>
+
+<details>
+  <summary>Example (Amazon Bedrock embedding)</summary>
+  <pre><code>config.set_provider_config("embedding", "BedrockEmbedding", {"model": "amazon.titan-embed-text-v2:0"})</code></pre>
+  <p> You need to install boto3 before running, execute: <code>pip install boto3</code>. More details about Amazon Bedrock: https://docs.aws.amazon.com/bedrock/ </p>
 </details>
 
 #### Vector Database Configuration
@@ -155,7 +161,7 @@ result = query("Write a report about xxx.") # Your question here
     <p> Make sure you have prepared your Unstructured API KEY and API URL as env variables <code>UNSTRUCTURED_API_KEY</code> and <code>UNSTRUCTURED_API_URL</code>.</p>
     <pre><code>config.set_provider_config("file_loader", "UnstructuredLoader", {})</code></pre>
     <p> Currently supported file types: ["pdf"] (Under development) </p>
-    <p> More details about Unstructured: https://docs.unstructured.io/api-reference/api-services/overview </p>
+    <p> You need to install unstructured-ingest before running, execute: <code>pip install unstructured-ingest</code>. More details about Unstructured: https://docs.unstructured.io/ingestion/overview </p>
 </details>
 
 #### Web Crawler Configuration
@@ -174,7 +180,7 @@ result = query("Write a report about xxx.") # Your question here
   <summary>Example (Crawl4AI)</summary>
     <p> Make sure you have run <code>crawl4ai-setup</code> in your environment.</p>
     <pre><code>config.set_provider_config("web_crawler", "Crawl4AICrawler", {})</code></pre>
-    <p> More details about Crawl4AI: https://docs.crawl4ai.com/core/quickstart/ </p>
+    <p> You need to install crawl4ai before running, execute: <code>pip install crawl4ai</code>. More details about Crawl4AI: https://docs.crawl4ai.com/ </p>
 </details>
 
 <details>
@@ -273,6 +279,6 @@ export HF_ENDPOINT=https://hf-mirror.com
 - Enhance web crawling functionality
 - Support more vector databases (e.g., FAISS...)
 - Add support for additional large models
-- Provide RESTful API interface
+- Provide RESTful API interface (**DONE**)
 
 We welcome contributions! Star & Fork the project and help us build a more powerful DeepSearcher! 🎯
