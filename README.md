@@ -26,6 +26,7 @@ Install DeepSearcher using pip:
 # Clone the repository
 git clone https://github.com/zilliztech/deep-searcher.git
 
+# MAKE SURE the python version is greater than or equal to 3.10
 # Recommended: Create a Python virtual environment
 cd deep-searcher
 python3 -m venv .venv
