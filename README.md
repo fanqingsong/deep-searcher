@@ -257,10 +257,31 @@ Click on the button "Try it out", it allows you to fill the parameters and direc
 OSError: We couldn't connect to 'https://huggingface.co' to load this file, couldn't find it in the cached files and it looks like GPTCache/paraphrase-albert-small-v2 is not the path to a directory containing a file named config.json.
 Checkout your internet connection or see how to run the library in offline mode at 'https://huggingface.co/docs/transformers/installation#offline-mode'.
 
-**A1**: Access huggingface exception, try adding the following environment variable:
+**A1**: This is mainly due to abnormal access to huggingface, which may be a network or permission problem. You can try the following two methods:
+1. If there is a network problem, set up a proxy, try adding the following environment variable.
 ```bash
 export HF_ENDPOINT=https://hf-mirror.com
 ```
+2. If there is a permission problem, set up a personal token, try adding the following environment variable.
+```bash
+export HUGGING_FACE_HUB_TOKEN=xxxx
+```
+
+---
+
+**Q2**: DeepSearcher doesn't run in Jupyter notebook.
+
+**A2**: Install `nest_asyncio` and then put this code block in front of your jupyter notebook.
+
+```
+pip install nest_asyncio
+```
+
+```
+import nest_asyncio
+nest_asyncio.apply()
+```
+
 ---
 
 ## 🔧 Module Support
