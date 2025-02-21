@@ -99,7 +99,7 @@ result = query("Write a report about xxx.") # Your question here
   <summary>Example (Google Gemini)</summary>
     <p> Make sure you have prepared your GEMINI API KEY as an env variable <code>GEMINI_API_KEY</code>.</p>
     <pre><code>config.set_provider_config('llm', 'Gemini', { 'model': 'gemini-2.0-flash' })</code></pre>
-    <p> You need to install gemini before running, execute: <code>pip install google-genai</code>. More details about TogetherAI: https://ai.google.dev/gemini-api/docs </p>
+    <p> You need to install gemini before running, execute: <code>pip install google-genai</code>. More details about Gemini: https://ai.google.dev/gemini-api/docs </p>
 </details>
 
 #### Embedding Model Configuration
@@ -290,6 +290,7 @@ nest_asyncio.apply()
 - [Open-source embedding models](https://milvus.io/docs/embeddings.md)
 - [OpenAI](https://platform.openai.com/docs/guides/embeddings/use-cases) (`OPENAI_API_KEY` env variable required)
 - [VoyageAI](https://docs.voyageai.com/embeddings/) (`VOYAGE_API_KEY` env variable required)
+- [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/) (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` env variable required)
 
 ### 🔹 LLM Support
 - [OpenAI](https://platform.openai.com/docs/models) (`OPENAI_API_KEY` env variable required)
@@ -297,6 +298,7 @@ nest_asyncio.apply()
 - [Grok 3](https://x.ai/blog/grok-3) (Coming soon!)
 - [SiliconFlow Inference Service](https://docs.siliconflow.cn/en/userguide/introduction) (`SILICONFLOW_API_KEY` env variable required)
 - [TogetherAI Inference Service](https://docs.together.ai/docs/introduction) (`TOGETHER_API_KEY` env variable required)
+- [Google Gemini](https://ai.google.dev/gemini-api/docs) (`GEMINI_API_KEY` env variable required)
 - [SambaNova Cloud Inference Service](https://docs.together.ai/docs/introduction) (`SAMBANOVA_API_KEY` env variable required)
 
 ### 🔹 Document Loader
