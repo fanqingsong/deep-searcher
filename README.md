@@ -1,6 +1,6 @@
 # DeepSearcher
 
-DeepSearcher combines powerful LLMs (DeepSeek, OpenAI, etc.) and Vector Databases (Milvus, etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answer and comprehensive report. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
+DeepSearcher combines reasoning LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3 etc.) and Vector Databases (Milvus, Zilliz Cloud etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answer and comprehensive report. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
 
 ![Architecture](./assets/pic/deep-searcher-arch.png)
 
@@ -287,15 +287,17 @@ nest_asyncio.apply()
 ## 🔧 Module Support
 
 ### 🔹 Embedding Models
-- [Pymilvus built-in embedding model](https://milvus.io/docs/embeddings.md)
+- [Open-source embedding models](https://milvus.io/docs/embeddings.md)
 - [OpenAI](https://platform.openai.com/docs/guides/embeddings/use-cases) (`OPENAI_API_KEY` env variable required)
 - [VoyageAI](https://docs.voyageai.com/embeddings/) (`VOYAGE_API_KEY` env variable required)
 
 ### 🔹 LLM Support
-- [DeepSeek](https://api-docs.deepseek.com/) (`DEEPSEEK_API_KEY` env variable required)
 - [OpenAI](https://platform.openai.com/docs/models) (`OPENAI_API_KEY` env variable required)
-- [SiliconFlow](https://docs.siliconflow.cn/en/userguide/introduction) (`SILICONFLOW_API_KEY` env variable required)
-- [TogetherAI](https://docs.together.ai/docs/introduction) (`TOGETHER_API_KEY` env variable required)
+- [DeepSeek](https://api-docs.deepseek.com/) (`DEEPSEEK_API_KEY` env variable required)
+- [Grok 3](https://x.ai/blog/grok-3) (Coming soon!)
+- [SiliconFlow Inference Service](https://docs.siliconflow.cn/en/userguide/introduction) (`SILICONFLOW_API_KEY` env variable required)
+- [TogetherAI Inference Service](https://docs.together.ai/docs/introduction) (`TOGETHER_API_KEY` env variable required)
+- [SambaNova Cloud Inference Service](https://docs.together.ai/docs/introduction) (`SAMBANOVA_API_KEY` env variable required)
 
 ### 🔹 Document Loader
 - Local File
