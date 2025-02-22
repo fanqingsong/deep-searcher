@@ -72,7 +72,7 @@ def main():
                 kwargs["force_new_collection"] = args.force_new_collection
             if len(urls) > 0:
                 load_from_website(urls, **kwargs)
-            else:
+            if len(local_files) > 0:
                 load_from_local_files(local_files, **kwargs)
         else:
             print("Please provide a query or a load argument.")
