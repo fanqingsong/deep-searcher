@@ -16,9 +16,9 @@ class BaseCrawler(ABC):
         # return [Document(page_content=..., metadata={"reference": "www.abc.com/page1.html"})]
 
     def crawl_urls(self, urls: List[str], **crawl_kwargs) -> List[Document]:
-        '''
+        """
         Crawl multiple URLs and return a list of Document objects.
-        '''
+        """
         documents = []
         for url in urls:
             documents.extend(self.crawl_url(url, **crawl_kwargs))
