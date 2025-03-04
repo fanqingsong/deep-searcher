@@ -6,6 +6,7 @@ from langchain_core.documents import Document
 from deepsearcher.loader.web_crawler.base import BaseCrawler
 from deepsearcher.tools import log
 
+
 class Crawl4AICrawler(BaseCrawler):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -70,7 +71,6 @@ class Crawl4AICrawler(BaseCrawler):
                     metadata["author"] = result.metadata.get("author", "")
                 documents.append(Document(page_content=markdown_content, metadata=metadata))
             return documents
-
 
     def crawl_urls(self, urls: List[str], **crawl_kwargs) -> List[Document]:
         try:
