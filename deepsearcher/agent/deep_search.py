@@ -212,7 +212,7 @@ class DeepSearch(RAGAgent):
             # search_res_from_internet = deduplicate_results(search_res_from_internet)
             all_search_res.extend(search_res_from_vectordb + search_res_from_internet)
             if iter == self.max_iter - 1:
-                log.color_print(f"<think> Exceeded maximum iterations. Exiting. </think>\n")
+                log.color_print("<think> Exceeded maximum iterations. Exiting. </think>\n")
                 break
             ### REFLECTION & GET GAP QUERIES ###
             log.color_print("<think> Reflecting on the search results... </think>\n")
