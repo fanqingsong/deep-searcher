@@ -59,6 +59,18 @@ class TestMilvus(unittest.TestCase):
         )
         milvus.clear_db(collection=collection)
         self.assertFalse(milvus.client.has_collection(collection, timeout=5))
+    
+    def test_drop_collection(self):
+        d = 8
+        collection = "hello_deepsearcher"
+        milvus = Milvus()
+        milvus.init_collection(
+            dim=d,
+            only_init_client=True,
+            collection=collection
+        )
+        milvus.client.drop_collection(collection)
+        self.assertFalse(milvus.client.has_collection(collection, timeout=5))
 
 
 if __name__ == "__main__":
