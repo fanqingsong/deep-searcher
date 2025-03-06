@@ -1,8 +1,7 @@
 from typing import List, Optional, Union
 import numpy as np
 import array,json
-#from pymilvus import DataType, MilvusClient
-import oracledb
+
 
 from deepsearcher.loader.splitter import Chunk
 from deepsearcher.tools import log
@@ -11,7 +10,7 @@ from deepsearcher.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalR
 
 class OracleDB(BaseVectorDB):
     """OracleDB class is a subclass of DB class."""
-
+    
     client = None
 
     def __init__(
@@ -29,8 +28,14 @@ class OracleDB(BaseVectorDB):
     ):
         super().__init__(default_collection)
         self.default_collection = default_collection
+
+        import oracledb
+
         oracledb.defaults.fetch_lobs = False
+        self.DB_TYPE_VECTOR = oracledb.DB_TYPE_VECTOR
+        
         try:
+            
             self.client = oracledb.create_pool(
                 user=user, password=password, dsn=dsn,
                 config_dir=config_dir, wallet_location=wallet_location, wallet_password=wallet_password,
@@ -56,7 +61,7 @@ class OracleDB(BaseVectorDB):
         """Set the type handler for the input data"""
         if isinstance(value, np.ndarray):
             return cursor.var(
-                oracledb.DB_TYPE_VECTOR,
+                self.DB_TYPE_VECTOR,
                 arraysize=arraysize,
                 inconverter=self.numpy_converter_in,
             )
@@ -73,7 +78,7 @@ class OracleDB(BaseVectorDB):
 
     def output_type_handler(self, cursor, metadata):
         """Set the type handler for the output data"""
-        if metadata.type_code is oracledb.DB_TYPE_VECTOR:
+        if metadata.type_code is self.DB_TYPE_VECTOR:
             return cursor.var(
                 metadata.type_code,
                 arraysize=cursor.arraysize,
