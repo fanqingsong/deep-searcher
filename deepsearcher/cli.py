@@ -56,7 +56,7 @@ def main():
         type=int,
         default=256,
         help="Batch size for loading knowledge.",
-    )   
+    )
     load_parser.add_argument(
         "--collection_name",
         type=str,
