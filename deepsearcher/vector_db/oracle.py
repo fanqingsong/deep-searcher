@@ -1,7 +1,8 @@
-from typing import List, Optional, Union
-import numpy as np
 import array
 import json
+from typing import List, Optional, Union
+
+import numpy as np
 
 from deepsearcher.loader.splitter import Chunk
 from deepsearcher.tools import log
