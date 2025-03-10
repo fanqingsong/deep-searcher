@@ -153,7 +153,7 @@ class OracleDB(BaseVectorDB):
                 for table in missing_table:
                     self.create_tables(table)
         except Exception as e:
-            log.critical(f"Failed to check table in Oracle database")
+            log.critical(f"Failed to check table in Oracle database, error info: {e}")
             raise
     
     def create_tables(self,table_name):
@@ -162,7 +162,7 @@ class OracleDB(BaseVectorDB):
             self.execute(SQL)
             log.color_print(f"Created table {table_name} in Oracle database")
         except Exception as e:
-            log.critical(f"Failed to create table {table_name} in Oracle database")
+            log.critical(f"Failed to create table {table_name} in Oracle database, error info: {e}")
             raise
 
         
@@ -313,7 +313,6 @@ class OracleDB(BaseVectorDB):
             collections = self.query(SQL)
             if collections:        
                 for collection in collections:
-                    description = ""
                     collection_infos.append(
                         CollectionInfo(
                             collection_name=collection["collection"],
