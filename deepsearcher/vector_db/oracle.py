@@ -11,11 +11,11 @@ from deepsearcher.vector_db.base import BaseVectorDB, CollectionInfo, RetrievalR
 
 class OracleDB(BaseVectorDB):
     """OracleDB class is a subclass of DB class."""
-    
+
     client = None
 
     def __init__(
-        self,        
+        self,
         user: str,
         password: str,
         dsn: str,
@@ -34,14 +34,19 @@ class OracleDB(BaseVectorDB):
 
         oracledb.defaults.fetch_lobs = False
         self.DB_TYPE_VECTOR = oracledb.DB_TYPE_VECTOR
-        
+
         try:
-            
             self.client = oracledb.create_pool(
-                user=user, password=password, dsn=dsn,
-                config_dir=config_dir, wallet_location=wallet_location, wallet_password=wallet_password,
-                min=min, max=max, increment=increment
-                )
+                user=user,
+                password=password,
+                dsn=dsn,
+                config_dir=config_dir,
+                wallet_location=wallet_location,
+                wallet_password=wallet_password,
+                min=min,
+                max=max,
+                increment=increment,
+            )
             log.color_print(f"Connected to Oracle database at {dsn}")
             self.check_table()
         except Exception as e:
@@ -94,22 +99,22 @@ class OracleDB(BaseVectorDB):
             with connection.cursor() as cursor:
                 try:
                     if log.dev_mode:
-                        print("sql:\n",sql)
-                    #log.debug("def query:"+params)
+                        print("sql:\n", sql)
+                    # log.debug("def query:"+params)
                     # print("sql:\n",sql)
                     # print("params:\n",params)
                     cursor.execute(sql, params)
                 except Exception as e:
                     log.critical(f"Oracle database error in query: {e}")
                     raise
-                columns = [column[0].lower() for column in cursor.description]                
+                columns = [column[0].lower() for column in cursor.description]
                 rows = cursor.fetchall()
                 if rows:
                     data = [dict(zip(columns, row)) for row in rows]
                 else:
                     data = []
                 if log.dev_mode:
-                    print("data:\n",data)              
+                    print("data:\n", data)
                 return data
             # self.client.drop(connection)
 
@@ -124,12 +129,12 @@ class OracleDB(BaseVectorDB):
                     if data is None:
                         cursor.execute(sql)
                     else:
-                        cursor.execute(sql,data)
-                    connection.commit()                    
+                        cursor.execute(sql, data)
+                    connection.commit()
         except Exception as e:
             log.critical(f"Oracle database error in execute: {e}")
-            log.error("ERROR sql:\n"+sql)
-            log.error("ERROR data:\n"+data)
+            log.error("ERROR sql:\n" + sql)
+            log.error("ERROR data:\n" + data)
             raise
 
     def has_collection(self, collection: str = "deepsearcher"):
@@ -143,21 +148,20 @@ class OracleDB(BaseVectorDB):
                 return False
         else:
             return False
-            
 
     def check_table(self):
         SQL = SQL_TEMPLATES["has_table"]
         try:
             res = self.query(SQL)
-            if len(res)<2:
+            if len(res) < 2:
                 missing_table = TABLES.keys() - set([i["table_name"] for i in res])
                 for table in missing_table:
                     self.create_tables(table)
         except Exception as e:
             log.critical(f"Failed to check table in Oracle database, error info: {e}")
             raise
-    
-    def create_tables(self,table_name):
+
+    def create_tables(self, table_name):
         SQL = TABLES[table_name]
         try:
             self.execute(SQL)
@@ -166,9 +170,8 @@ class OracleDB(BaseVectorDB):
             log.critical(f"Failed to create table {table_name} in Oracle database, error info: {e}")
             raise
 
-        
     def drop_collection(self, collection: str = "deepsearcher"):
-        try:            
+        try:
             params = {"collection": collection}
             SQL = SQL_TEMPLATES["drop_collection"]
             self.execute(SQL, params)
@@ -180,28 +183,31 @@ class OracleDB(BaseVectorDB):
             log.critical(f"fail to drop collection, error info: {e}")
             raise
 
-    def insertone(self,data):
+    def insertone(self, data):
         SQL = SQL_TEMPLATES["insert"]
         self.execute(SQL, data)
         log.debug("insert done!")
-    
-    def searchone(self,
-        collection: Optional[str],
-        vector: Union[np.array, List[float]],
-        top_k: int = 5
-        ):
-        log.debug("def searchone:"+collection)
+
+    def searchone(
+        self, collection: Optional[str], vector: Union[np.array, List[float]], top_k: int = 5
+    ):
+        log.debug("def searchone:" + collection)
         try:
-            if isinstance(vector,List):
+            if isinstance(vector, List):
                 vector = np.array(vector)
-            embedding_string = "[" + ", ".join(map(str, vector.tolist())) + "]"            
+            embedding_string = "[" + ", ".join(map(str, vector.tolist())) + "]"
             dimension = vector.shape[0]
             dtype = str(vector.dtype).upper()
 
             SQL = SQL_TEMPLATES["search"].format(dimension=dimension, dtype=dtype)
             max_distance = 0.8
-            params = {"collection": collection, "embedding_string":embedding_string, "top_k":top_k,"max_distance":max_distance}
-            res = self.query(SQL,params)
+            params = {
+                "collection": collection,
+                "embedding_string": embedding_string,
+                "top_k": top_k,
+                "max_distance": max_distance,
+            }
+            res = self.query(SQL, params)
             if res:
                 return res
             else:
@@ -226,7 +232,7 @@ class OracleDB(BaseVectorDB):
             collection = self.default_collection
         if description is None:
             description = ""
-        try: 
+        try:
             has_collection = self.has_collection(collection)
             if force_new_collection and has_collection:
                 self.drop_collection(collection)
@@ -235,7 +241,7 @@ class OracleDB(BaseVectorDB):
             # insert collection info
             SQL = SQL_TEMPLATES["insert_collection"]
             params = {"collection": collection, "description": description}
-            self.execute(SQL, params)            
+            self.execute(SQL, params)
         except Exception as e:
             log.critical(f"fail to init_collection for oracle, error info: {e}")
 
@@ -249,7 +255,7 @@ class OracleDB(BaseVectorDB):
     ):
         if not collection:
             collection = self.default_collection
-        
+
         datas = []
         for chunk in chunks:
             _data = {
@@ -257,15 +263,15 @@ class OracleDB(BaseVectorDB):
                 "text": chunk.text,
                 "reference": chunk.reference,
                 "metadata": json.dumps(chunk.metadata),
-                "collection":collection
+                "collection": collection,
             }
-            datas.append(_data)                 
-        
+            datas.append(_data)
+
         batch_datas = [datas[i : i + batch_size] for i in range(0, len(datas), batch_size)]
         try:
             for batch_data in batch_datas:
                 for _data in batch_data:
-                    self.insertone(data = _data)
+                    self.insertone(data=_data)
             log.color_print(f"Successfully insert {len(datas)} data")
         except Exception as e:
             log.critical(f"fail to insert data, error info: {e}")
@@ -282,14 +288,10 @@ class OracleDB(BaseVectorDB):
         if not collection:
             collection = self.default_collection
         try:
-            #print("def search_data:",collection)
-            #print("def search_data:",type(vector))
-            search_results = self.searchone(
-                collection=collection,
-                vector=vector,
-                top_k=top_k
-            )
-            #print("def search_data: search_results",search_results)
+            # print("def search_data:",collection)
+            # print("def search_data:",type(vector))
+            search_results = self.searchone(collection=collection, vector=vector, top_k=top_k)
+            # print("def search_data: search_results",search_results)
 
             return [
                 RetrievalResult(
@@ -302,29 +304,28 @@ class OracleDB(BaseVectorDB):
                 for b in search_results
             ]
         except Exception as e:
-            log.critical(f"fail to search data, error info: {e}")            
+            log.critical(f"fail to search data, error info: {e}")
             raise
-            #return []
+            # return []
 
     def list_collections(self, *args, **kwargs) -> List[CollectionInfo]:
         collection_infos = []
         try:
             SQL = SQL_TEMPLATES["list_collections"]
-            log.debug("def list_collections:"+SQL)
+            log.debug("def list_collections:" + SQL)
             collections = self.query(SQL)
-            if collections:        
+            if collections:
                 for collection in collections:
                     collection_infos.append(
                         CollectionInfo(
                             collection_name=collection["collection"],
                             description=collection["description"],
                         )
-                    )            
+                    )
             return collection_infos
         except Exception as e:
             log.critical(f"fail to list collections, error info: {e}")
             raise
-        
 
     def clear_db(self, collection: str = "deepsearcher", *args, **kwargs):
         if not collection:
@@ -335,16 +336,16 @@ class OracleDB(BaseVectorDB):
             log.warning(f"fail to clear db, error info: {e}")
             raise
 
+
 TABLES = {
-    "DEEPSEARCHER_COLLECTION_INFO":"""CREATE TABLE DEEPSEARCHER_COLLECTION_INFO (    
+    "DEEPSEARCHER_COLLECTION_INFO": """CREATE TABLE DEEPSEARCHER_COLLECTION_INFO (    
         id INT generated by default as identity primary key,
         collection varchar(256),
         description CLOB,
         status NUMBER DEFAULT 1,
         createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updatetime TIMESTAMP DEFAULT NULL)""",
-
-    "DEEPSEARCHER_COLLECTION_ITEM":"""CREATE TABLE DEEPSEARCHER_COLLECTION_ITEM (    
+    "DEEPSEARCHER_COLLECTION_ITEM": """CREATE TABLE DEEPSEARCHER_COLLECTION_ITEM (    
         id INT generated by default as identity primary key,
         collection varchar(256),
         embedding VECTOR,
@@ -353,30 +354,25 @@ TABLES = {
         metadata CLOB,
         status NUMBER DEFAULT 1,
         createtime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updatetime TIMESTAMP DEFAULT NULL)"""
+        updatetime TIMESTAMP DEFAULT NULL)""",
 }
 
 SQL_TEMPLATES = {
     "has_table": f"""SELECT table_name FROM all_tables 
-        WHERE table_name in ({','.join([f"'{k}'" for k in TABLES.keys()])})""",
-
+        WHERE table_name in ({",".join([f"'{k}'" for k in TABLES.keys()])})""",
     "has_collection": "select count(*) as rowcnt from DEEPSEARCHER_COLLECTION_INFO where collection=:collection and status=1",
-    "list_collections":"select collection,description from DEEPSEARCHER_COLLECTION_INFO where status=1",
+    "list_collections": "select collection,description from DEEPSEARCHER_COLLECTION_INFO where status=1",
     "drop_collection": "update DEEPSEARCHER_COLLECTION_INFO set status=0 where collection=:collection and status=1",
     "drop_collection_item": "update DEEPSEARCHER_COLLECTION_ITEM set status=0 where collection=:collection and status=1",
-
-    "insert_collection":"""INSERT INTO DEEPSEARCHER_COLLECTION_INFO (collection,description) 
+    "insert_collection": """INSERT INTO DEEPSEARCHER_COLLECTION_INFO (collection,description) 
         values (:collection,:description)""",
-
     "insert": """INSERT INTO DEEPSEARCHER_COLLECTION_ITEM (collection,embedding,text,reference,metadata) 
         values (:collection,:embedding,:text,:reference,:metadata)""",
-
-    "search":"""SELECT * FROM 
+    "search": """SELECT * FROM 
         (SELECT t.*,
             VECTOR_DISTANCE(t.embedding,vector(:embedding_string,{dimension},{dtype}),COSINE) as distance
         FROM DEEPSEARCHER_COLLECTION_ITEM t 
         JOIN DEEPSEARCHER_COLLECTION_INFO c ON t.collection=c.collection 
         WHERE t.collection=:collection AND t.status=1 AND c.status=1)
         WHERE distance<:max_distance ORDER BY distance ASC FETCH FIRST :top_k ROWS ONLY""",
-   
 }
