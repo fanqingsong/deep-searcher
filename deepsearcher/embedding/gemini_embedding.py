@@ -34,14 +34,15 @@ class GeminiEmbedding(BaseEmbedding):
         else:
             dimension = GEMINI_MODEL_DIM_MAP[model]
         self.dim = dimension
-        self.model=model
+        self.model = model
         self.client = genai.Client(api_key=api_key, **kwargs)
 
     def _get_dim(self):
         return self.dim
-    
+
     def _embed_content(self, texts: List[str]):
         from google.genai import types
+
         response = self.client.models.embed_content(
             model=self.model,
             contents=texts,
@@ -57,10 +58,10 @@ class GeminiEmbedding(BaseEmbedding):
         # embedding = [r.values for r in result]
         embedding = result[0].values
         return embedding
-    
+
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         # For Gemini free level, the maximum rqeusts in one batch is 100, so we need to split the texts again
-        sub_splits = [texts[i:i+100] for i in range(0, len(texts), 100)]
+        sub_splits = [texts[i : i + 100] for i in range(0, len(texts), 100)]
         embeddings = []
         for texts in sub_splits:
             result = self._embed_content(texts)
@@ -70,4 +71,3 @@ class GeminiEmbedding(BaseEmbedding):
     @property
     def dimension(self) -> int:
         return self.dim
-    
