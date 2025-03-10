@@ -1,7 +1,7 @@
 from typing import List, Optional, Union
 import numpy as np
-import array,json
-
+import array
+import json
 
 from deepsearcher.loader.splitter import Chunk
 from deepsearcher.tools import log
