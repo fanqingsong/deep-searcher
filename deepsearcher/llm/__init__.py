@@ -8,6 +8,7 @@ from .ppio import PPIO
 from .siliconflow import SiliconFlow
 from .together_ai import TogetherAI
 from .xai import XAI
+from .volcengine import Volcengine
 
 __all__ = [
     "DeepSeek",
@@ -20,4 +21,5 @@ __all__ = [
     "XAI",
     "Anthropic",
     "Ollama",
+    "Volcengine",
 ]
