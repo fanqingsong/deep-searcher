@@ -7,8 +7,8 @@ from .openai_llm import OpenAI
 from .ppio import PPIO
 from .siliconflow import SiliconFlow
 from .together_ai import TogetherAI
-from .xai import XAI
 from .volcengine import Volcengine
+from .xai import XAI
 
 __all__ = [
     "DeepSeek",
