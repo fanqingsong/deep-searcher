@@ -106,18 +106,13 @@ class PPIOEmbedding(BaseEmbedding):
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
         }
-        
+
         # Handle both single string and list of strings
         input_list = input if isinstance(input, list) else [input]
-        
-        payload = {
-            "model": self.model,
-            "input": input_list
-        }
-        
-        response = requests.request(
-            "POST", PPIO_EMBEDDING_API, json=payload, headers=headers
-        )
+
+        payload = {"model": self.model, "input": input_list}
+
+        response = requests.request("POST", PPIO_EMBEDDING_API, json=payload, headers=headers)
         response.raise_for_status()
         result = response.json()["data"]
         sorted_results = sorted(result, key=lambda x: x["index"])
