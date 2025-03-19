@@ -1,8 +1,9 @@
 import os
 from typing import Dict, List
+
 from deepsearcher.llm.base import BaseLLM, ChatResponse
- 
- 
+
+
 class GLM(BaseLLM):
     """
     https://open.bigmodel.cn/api/paas/v4/
@@ -19,9 +20,7 @@ class GLM(BaseLLM):
         if "base_url" in kwargs:
             base_url = kwargs.pop("base_url")
         else:
-            base_url = os.getenv(
-                "GLM_BASE_URL", default="https://open.bigmodel.cn/api/paas/v4/"
-            )
+            base_url = os.getenv("GLM_BASE_URL", default="https://open.bigmodel.cn/api/paas/v4/")
         self.client = OpenAI_(api_key=api_key, base_url=base_url, **kwargs)
 
     def chat(self, messages: List[Dict]) -> ChatResponse:
