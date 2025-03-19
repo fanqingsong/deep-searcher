@@ -6,6 +6,7 @@ from .ppio_embedding import PPIOEmbedding
 from .siliconflow_embedding import SiliconflowEmbedding
 from .volcengine_embedding import VolcengineEmbedding
 from .voyage_embedding import VoyageEmbedding
+from .glm_embedding import GLMEmbedding
 
 __all__ = [
     "MilvusEmbedding",
@@ -16,4 +17,5 @@ __all__ = [
     "GeminiEmbedding",
     "PPIOEmbedding",
     "VolcengineEmbedding",
+    "GLMEmbedding",
 ]

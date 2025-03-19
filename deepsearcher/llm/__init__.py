@@ -9,6 +9,7 @@ from .siliconflow import SiliconFlow
 from .together_ai import TogetherAI
 from .volcengine import Volcengine
 from .xai import XAI
+from .glm import GLM
 
 __all__ = [
     "DeepSeek",
@@ -22,4 +23,5 @@ __all__ = [
     "Anthropic",
     "Ollama",
     "Volcengine",
+    "GLM",
 ]
