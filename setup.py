@@ -19,6 +19,7 @@ setup(
         "fastapi",
         "uvicorn",
         "pydantic-settings",
+        "zhipuai",
     ],
     entry_points={
         "console_scripts": ["deepsearcher=deepsearcher.cli:main"],
