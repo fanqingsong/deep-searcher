@@ -10,6 +10,7 @@ from .siliconflow import SiliconFlow
 from .together_ai import TogetherAI
 from .volcengine import Volcengine
 from .xai import XAI
+from .bedrock import Bedrock
 
 __all__ = [
     "DeepSeek",
@@ -24,4 +25,5 @@ __all__ = [
     "Ollama",
     "Volcengine",
     "GLM",
+    "Bedrock",
 ]
