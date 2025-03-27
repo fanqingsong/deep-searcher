@@ -18,11 +18,11 @@ class Bedrock(BaseLLM):
     """
 
     def __init__(
-            self,
-            model_id: str = "us.deepseek.r1-v1:0",
-            max_tokens: int = 2000,
-            region_name: str = "us-west-2",
-            **kwargs
+        self,
+        model_id: str = "us.deepseek.r1-v1:0",
+        max_tokens: int = 20000,
+        region_name: str = "us-west-2",
+        **kwargs,
     ):
         """
         Initialize an AWS Bedrock language model client.
@@ -42,9 +42,7 @@ class Bedrock(BaseLLM):
         self.max_tokens = max_tokens
 
         # Extract AWS credentials if provided
-        client_kwargs = {
-            "region_name": region_name
-        }
+        client_kwargs = {"region_name": region_name}
 
         for key in ["aws_access_key_id", "aws_secret_access_key", "aws_session_token"]:
             if key in kwargs:
@@ -73,7 +71,7 @@ class Bedrock(BaseLLM):
             if isinstance(message.get("content"), str):
                 formatted_message = {
                     "role": message["role"],
-                    "content": [{"text": message["content"]}]
+                    "content": [{"text": message["content"]}],
                 }
                 formatted_messages.append(formatted_message)
             else:
@@ -84,12 +82,11 @@ class Bedrock(BaseLLM):
             messages=formatted_messages,
             inferenceConfig={
                 "maxTokens": self.max_tokens,
-            }
+            },
         )
 
-        # Extract the response content
         text = response["output"]["message"]["content"][0]["text"]
-        cleaned_text = text.replace('\n', '')
+        cleaned_text = text.replace("\n", "")
 
         return ChatResponse(
             content=cleaned_text,
