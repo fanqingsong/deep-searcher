@@ -1,58 +1,51 @@
-import os
 from typing import List, Union
-
-import requests
 
 from deepsearcher.embedding.base import BaseEmbedding
 
-SILICONFLOW_MODEL_DIM_MAP = {
-    "BAAI/bge-m3": 1024,
-    "netease-youdao/bce-embedding-base_v1": 768,
-    "BAAI/bge-large-zh-v1.5": 1024,
-    "BAAI/bge-large-en-v1.5": 1024,
-    "Pro/BAAI/bge-m3": 1024,  # paid model
+OLLAMA_MODEL_DIM_MAP = {
+    "bge-m3": 1024,
+    "mxbai-embed-large": 768,
+    "nomic-embed-text": 768,
 }
 
-SILICONFLOW_EMBEDDING_API = "https://api.siliconflow.cn/v1/embeddings"
 
-
-class SiliconflowEmbedding(BaseEmbedding):
+class OllamaEmbedding(BaseEmbedding):
     """
-    SiliconFlow embedding model implementation.
+    Ollama embedding model implementation.
 
-    This class provides an interface to the SiliconFlow embedding API, which offers
+    This class provides an interface to the Ollama embedding API, which offers
     various embedding models for text processing.
-
-    For more information, see:
-    https://docs.siliconflow.cn/en/api-reference/embeddings/create-embeddings
     """
 
-    def __init__(self, model="BAAI/bge-m3", batch_size=32, **kwargs):
+    def __init__(self, model="bge-m3", batch_size=32, **kwargs):
         """
-        Initialize the SiliconFlow embedding model.
+        Initialize the Ollama embedding model.
 
         Args:
-            model (str): The model identifier to use for embeddings. Default is "BAAI/bge-m3".
-            batch_size (int): Maximum number of texts to process in a single batch. Default is 32.
+            model (str): The model identifier to use for embeddings. Default is "bge-m3".
             **kwargs: Additional keyword arguments.
-                - api_key (str, optional): The SiliconFlow API key. If not provided,
-                  it will be read from the SILICONFLOW_API_KEY environment variable.
+                - base_url (str, optional): The base URL for the Ollama API. If not provided,
+                  defaults to "http://localhost:11434".
                 - model_name (str, optional): Alternative way to specify the model.
-
-        Raises:
-            RuntimeError: If no API key is provided or found in environment variables.
+                - dimension (int, optional): The dimension of the embedding vectors.
+                  If not provided, the default dimension for the model will be used.
         """
-        if "model_name" in kwargs and (not model or model == "BAAI/bge-m3"):
+        from ollama import Client
+
+        if "model_name" in kwargs and (not model or model == "bge-m3"):
             model = kwargs.pop("model_name")
         self.model = model
-        if "api_key" in kwargs:
-            api_key = kwargs.pop("api_key")
+        if "base_url" in kwargs:
+            base_url = kwargs.pop("base_url")
         else:
-            api_key = os.getenv("SILICONFLOW_API_KEY")
+            base_url = "http://localhost:11434/"
 
-        if not api_key or len(api_key) == 0:
-            raise RuntimeError("api_key is required for SiliconflowEmbedding")
-        self.api_key = api_key
+        if "dimension" in kwargs:
+            dimension = kwargs.pop("dimension")
+        else:
+            dimension = OLLAMA_MODEL_DIM_MAP[model]
+        self.dim = dimension
+        self.client = Client(host=base_url)
         self.batch_size = batch_size
 
     def embed_query(self, text: str) -> List[float]:
@@ -110,18 +103,8 @@ class SiliconflowEmbedding(BaseEmbedding):
         Raises:
             HTTPError: If the API request fails.
         """
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-        }
-        payload = {"model": self.model, "input": input, "encoding_format": "float"}
-        response = requests.request(
-            "POST", SILICONFLOW_EMBEDDING_API, json=payload, headers=headers
-        )
-        response.raise_for_status()
-        result = response.json()["data"]
-        sorted_results = sorted(result, key=lambda x: x["index"])
-        return [res["embedding"] for res in sorted_results]
+        response = self.client.embed(model=self.model, input=input)
+        return response["embeddings"]
 
     @property
     def dimension(self) -> int:
@@ -131,4 +114,4 @@ class SiliconflowEmbedding(BaseEmbedding):
         Returns:
             int: The number of dimensions in the embedding vectors.
         """
-        return SILICONFLOW_MODEL_DIM_MAP[self.model]
+        return self.dim
