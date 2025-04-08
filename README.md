@@ -26,20 +26,38 @@ DeepSearcher combines cutting-edge LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3, C
 ## 📖 Quick Start
 
 ### Installation
-Install DeepSearcher using pip:
+Install DeepSearcher using one of the following methods:
+
+#### Option 1: Using pip
 ```bash
-# Clone the repository
-git clone https://github.com/zilliztech/deep-searcher.git
-
-# MAKE SURE the python version is greater than or equal to 3.10
-# Recommended: Create a Python virtual environment
-cd deep-searcher
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install dependencies
-pip install -e .
+pip install deepsearcher
 ```
+
+For optional dependencies, e.g., ollama:
+```bash
+pip install "deepsearcher[ollama]"
+```
+
+#### Option 2: Using uv (recommended)
+We recommend using [uv](https://github.com/astral-sh/uv) for faster and more reliable installation:
+
+```bash
+uv pip install deepsearcher
+```
+
+Development mode with uv:
+```bash
+git clone https://github.com/zilliztech/deep-searcher.git && cd deep-searcher
+uv pip install -e .
+```
+
+For optional dependencies with uv, e.g., ollama:
+```bash
+uv pip install "deepsearcher[ollama]"
+```
+
+For more detailed development setup and optional dependency installation options, see [CONTRIBUTING.md](CONTRIBUTING.md#development-environment-setup-with-uv).
+
 Prepare your `OPENAI_API_KEY` in your environment variables. If you change the LLM in the configuration, make sure to prepare the corresponding API key.
 
 ### Quick start demo
