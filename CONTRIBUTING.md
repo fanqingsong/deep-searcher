@@ -44,10 +44,14 @@ DeepSearcher uses [uv](https://github.com/astral-sh/uv) as the recommended packa
    ```shell
    git clone https://github.com/zilliztech/deep-searcher.git && cd deep-searcher
    ```
-3. Create a virtual environment and install development dependencies:
+3. Create and activate a virtual environment
    ```shell
    uv venv
-   uv pip install -e ".[dev]"
+   source .venv/bin/activate
+   ```
+4. Install development dependencies:
+   ```shell
+   uv pip install -e .
    ```
 
    (Optional) To install all optional dependencies:
@@ -80,7 +84,11 @@ For more details, refer to the [offical Managing dependencies documentation](htt
 
 ### Dependencies Locking
 
-For development, we use lockfiles to ensure consistent dependencies. You can use `uv lock --check` to verify if your lockfile is up-to-date with your project dependencies.
+For development, we use lockfiles to ensure consistent dependencies. You can use 
+```shell
+uv lock --check
+```
+to verify if your lockfile is up-to-date with your project dependencies.
 
 When you modify or add dependencies in the project, the lockfile will be automatically updated the next time you run a uv command. You can also explicitly update the lockfile using:
 ```shell
