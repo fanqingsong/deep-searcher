@@ -95,10 +95,11 @@ When you modify or add dependencies in the project, the lockfile will be automat
 uv lock
 ```
 
-For upgrading specific packages:
+While the environment is synced automatically, it may also be explicitly synced using uv sync:
 ```shell
-uv lock --upgrade-package <package>
+uv sync
 ```
+Syncing the environment manually is especially useful for ensuring your editor has the correct versions of dependencies.
 
 
 For more detailed information about dependency locking and syncing, refer to the [offical Locking and syncing documentation](https://docs.astral.sh/uv/concepts/projects/sync/).
