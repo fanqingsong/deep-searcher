@@ -19,7 +19,8 @@ dependencies = [
 description = "None"
 license = { file = "LICENSE"}
 authors = [
-    { name = "Cheney Zhang", email = "277584121@qq.com" }
+    { name = "Cheney Zhang", email = "277584121@qq.com" },
+    { name = "SimFG", email = "bang.fu@zilliz.com" }
 ]
 
 [project.urls]
