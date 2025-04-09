@@ -6,6 +6,7 @@ OLLAMA_MODEL_DIM_MAP = {
     "bge-m3": 1024,
     "mxbai-embed-large": 768,
     "nomic-embed-text": 768,
+    "quentinz/bge-large-zh-v1.5:f32": 1024,
 }
 
 
