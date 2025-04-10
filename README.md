@@ -153,13 +153,6 @@ result = query("Write a report about xxx.") # Your question here
 </details>
 
 <details>
-  <summary>Example (DeepSeek-V3-0324 from Novita AI)</summary>
-    <p> Make sure you have prepared your Novita AI API KEY as an env variable <code>NOVITA_API_KEY</code>. You can create an API Key <a href="https://novita.ai/settings/key-management?utm_source=github_deep-searcher&utm_medium=github_readme&utm_campaign=link">here</a>. </p>
-    <pre><code>config.set_provider_config("llm", "Novita", {"model": "deepseek/deepseek-v3-0324"})</code></pre>
-    <p> More details about Novita AI: https://novita.ai/docs/guides/introduction?utm_source=github_deep-searcher&utm_medium=github_readme&utm_campaign=link </p>
-</details>
-
-<details>
   <summary>Example (Ollama)</summary>
   <p> Follow <a href="https://github.com/jmorganca/ollama">these instructions</a> to set up and run a local Ollama instance:</p>
   <p> <a href="https://ollama.ai/download">Download</a> and install Ollama onto the available supported platforms (including Windows Subsystem for Linux).</p>
