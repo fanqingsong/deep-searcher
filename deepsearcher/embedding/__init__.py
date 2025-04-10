@@ -9,6 +9,7 @@ from .ppio_embedding import PPIOEmbedding
 from .siliconflow_embedding import SiliconflowEmbedding
 from .volcengine_embedding import VolcengineEmbedding
 from .voyage_embedding import VoyageEmbedding
+from .novita_embedding import NovitaEmbedding
 
 __all__ = [
     "MilvusEmbedding",
@@ -22,4 +23,5 @@ __all__ = [
     "GLMEmbedding",
     "OllamaEmbedding",
     "FastEmbedEmbedding",
+    "NovitaEmbedding",
 ]

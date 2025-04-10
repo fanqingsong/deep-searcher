@@ -11,6 +11,7 @@ from .siliconflow import SiliconFlow
 from .together_ai import TogetherAI
 from .volcengine import Volcengine
 from .xai import XAI
+from .novita import Novita
 
 __all__ = [
     "DeepSeek",
@@ -26,4 +27,5 @@ __all__ = [
     "Volcengine",
     "GLM",
     "Bedrock",
+    "Novita",
 ]
