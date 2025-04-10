@@ -5,7 +5,7 @@
   <a href="https://discord.gg/mKc3R95yE5"><img height="20" src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white" alt="discord"/></a>
 
 
-DeepSearcher combines reasoning LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3, Claude 3.7 Sonnet, QwQ, etc.) and Vector Databases (Milvus, Zilliz Cloud etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answer and comprehensive report. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
+DeepSearcher combines cutting-edge LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3, Claude 3.7 Sonnet, Llama 4, QwQ, etc.) and Vector Databases (Milvus, Zilliz Cloud etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answer and comprehensive report. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
 
 ![Architecture](./assets/pic/deep-searcher-arch.png)
 
@@ -26,23 +26,43 @@ DeepSearcher combines reasoning LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3, Clau
 ## 📖 Quick Start
 
 ### Installation
-Install DeepSearcher using pip:
+Install DeepSearcher using one of the following methods:
+
+#### Option 1: Using pip
+Create and activate a virtual environment(Python 3.10 version is recommended).
 ```bash
-# Clone the repository
-git clone https://github.com/zilliztech/deep-searcher.git
-
-# MAKE SURE the python version is greater than or equal to 3.10
-# Recommended: Create a Python virtual environment
-cd deep-searcher
-python3 -m venv .venv
+python -m venv .venv
 source .venv/bin/activate
-
-# Install dependencies
-pip install -e .
 ```
-Prepare your `OPENAI_API_KEY` in your environment variables. If you change the LLM in the configuration, make sure to prepare the corresponding API key.
+Install DeepSearcher
+```bash
+pip install deepsearcher
+```
+
+For optional dependencies, e.g., ollama:
+```bash
+pip install "deepsearcher[ollama]"
+```
+
+#### Option 2: Install in Development Mode
+We recommend using [uv](https://github.com/astral-sh/uv) for faster and more reliable installation. Follow the [offical installation instructions](https://docs.astral.sh/uvgetting-started/installation/) to install it.
+
+Clone the repository and navigate to the project directory:
+```shell
+git clone https://github.com/zilliztech/deep-searcher.git && cd deep-searcher
+```
+Synchronize and install dependencies:
+```shell
+uv sync
+source .venv/bin/activate
+```
+
+For more detailed development setup and optional dependency installation options, see [CONTRIBUTING.md](CONTRIBUTING.md#development-environment-setup-with-uv).
 
 ### Quick start demo
+
+To run this quick start demo, please prepare your `OPENAI_API_KEY` in your environment variables. If you change the LLM in the configuration, make sure to prepare the corresponding API key.
+
 ```python
 from deepsearcher.configuration import Configuration, init_config
 from deepsearcher.online_query import query
@@ -97,7 +117,10 @@ result = query("Write a report about xxx.") # Your question here
 <details>
   <summary>Example (DeepSeek from TogetherAI)</summary>
     <p> Make sure you have prepared your TOGETHER API KEY as an env variable <code>TOGETHER_API_KEY</code>.</p>
+    For deepseek R1:
     <pre><code>config.set_provider_config("llm", "TogetherAI", {"model": "deepseek-ai/DeepSeek-R1"})</code></pre>
+    For Llama 4:
+    <pre><code>config.set_provider_config("llm", "TogetherAI", {"model": "meta-llama/Llama-4-Scout-17B-16E-Instruct"})</code></pre>
     <p> You need to install together before running, execute: <code>pip install together</code>. More details about TogetherAI: https://www.together.ai/ </p>
 </details>
 
