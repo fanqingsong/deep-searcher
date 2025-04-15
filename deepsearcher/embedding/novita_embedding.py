@@ -111,9 +111,7 @@ class NovitaEmbedding(BaseEmbedding):
             "Content-Type": "application/json",
         }
         payload = {"model": self.model, "input": input, "encoding_format": "float"}
-        response = requests.request(
-            "POST", NOVITA_EMBEDDING_API, json=payload, headers=headers
-        )
+        response = requests.request("POST", NOVITA_EMBEDDING_API, json=payload, headers=headers)
         response.raise_for_status()
         result = response.json()["data"]
         sorted_results = sorted(result, key=lambda x: x["index"])

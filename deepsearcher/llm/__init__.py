@@ -4,6 +4,7 @@ from .bedrock import Bedrock
 from .deepseek import DeepSeek
 from .gemini import Gemini
 from .glm import GLM
+from .novita import Novita
 from .ollama import Ollama
 from .openai_llm import OpenAI
 from .ppio import PPIO
@@ -11,7 +12,6 @@ from .siliconflow import SiliconFlow
 from .together_ai import TogetherAI
 from .volcengine import Volcengine
 from .xai import XAI
-from .novita import Novita
 
 __all__ = [
     "DeepSeek",
