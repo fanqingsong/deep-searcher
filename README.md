@@ -1,9 +1,14 @@
-# DeepSearcher
+![DeepSearcher](./assets/pic/logo.png)
 
+<div align="center">
+  
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Twitter](https://img.shields.io/twitter/url/https/twitter.com/zilliz_universe.svg?style=social&label=Follow%20%40Zilliz)](https://twitter.com/zilliz_universe)
-  <a href="https://discord.gg/mKc3R95yE5"><img height="20" src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white" alt="discord"/></a>
+<a href="https://discord.gg/mKc3R95yE5"><img height="20" src="https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white" alt="discord"/></a>
 
+</div>
+
+---
 
 DeepSearcher combines cutting-edge LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3, Claude 3.7 Sonnet, Llama 4, QwQ, etc.) and Vector Databases (Milvus, Zilliz Cloud etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answer and comprehensive report. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
 
@@ -90,7 +95,7 @@ result = query("Write a report about xxx.") # Your question here
 #### LLM Configuration
 
 <pre><code>config.set_provider_config("llm", "(LLMName)", "(Arguments dict)")</code></pre>
-<p>The "LLMName" can be one of the following: ["DeepSeek", "OpenAI", "XAI", "SiliconFlow", "PPIO", "TogetherAI", "Gemini", "Ollama"]</p>
+<p>The "LLMName" can be one of the following: ["DeepSeek", "OpenAI", "XAI", "SiliconFlow", "PPIO", "TogetherAI", "Gemini", "Ollama", "Novita"]</p>
 <p> The "Arguments dict" is a dictionary that contains the necessary arguments for the LLM class.</p>
 
 <details>
@@ -185,9 +190,16 @@ result = query("Write a report about xxx.") # Your question here
     <p> You need to install boto3 before running, execute: <code>pip install boto3</code>. More details about Amazon Bedrock: https://docs.aws.amazon.com/bedrock/ </p>
 </details>
 
+<details>
+  <summary>Example (Aliyun Bailian)</summary>
+    <p> Make sure you have prepared your Bailian API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("llm", "OpenAI", {"model": "deepseek-r1", "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1"})</code></pre>
+    <p> More details about Aliyun Bailian models: https://bailian.console.aliyun.com </p>
+</details>
+
 #### Embedding Model Configuration
 <pre><code>config.set_provider_config("embedding", "(EmbeddingModelName)", "(Arguments dict)")</code></pre>
-<p>The "EmbeddingModelName" can be one of the following: ["MilvusEmbedding", "OpenAIEmbedding", "VoyageEmbedding", "SiliconflowEmbedding", "PPIOEmbedding"]</p>
+<p>The "EmbeddingModelName" can be one of the following: ["MilvusEmbedding", "OpenAIEmbedding", "VoyageEmbedding", "SiliconflowEmbedding", "PPIOEmbedding", "NovitaEmbedding"]</p>
 <p> The "Arguments dict" is a dictionary that contains the necessary arguments for the embedding model class.</p>
 
 <details>
@@ -219,6 +231,13 @@ result = query("Write a report about xxx.") # Your question here
   <summary>Example (Amazon Bedrock embedding)</summary>
   <pre><code>config.set_provider_config("embedding", "BedrockEmbedding", {"model": "amazon.titan-embed-text-v2:0"})</code></pre>
   <p> You need to install boto3 before running, execute: <code>pip install boto3</code>. More details about Amazon Bedrock: https://docs.aws.amazon.com/bedrock/ </p>
+</details>
+
+<details>
+  <summary>Example (Novita AI embedding)</summary>
+    <p> Make sure you have prepared your Novita AI API KEY as an env variable <code>NOVITA_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("embedding", "NovitaEmbedding", {"model": "baai/bge-m3"})</code></pre>
+    <p> More details about Novita AI: https://novita.ai/docs/api-reference/model-apis-llm-create-embeddings?utm_source=github_deep-searcher&utm_medium=github_readme&utm_campaign=link </p>
 </details>
 
 <details>
@@ -440,6 +459,7 @@ nest_asyncio.apply()
 - [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/) (`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` env variable required)
 - [FastEmbed](https://qdrant.github.io/fastembed/)
 - [PPIO](https://ppinfra.com/model-api/product/llm-api?utm_source=github_deep-searcher) (`PPIO_API_KEY` env variable required)
+- [Novita AI](https://novita.ai/docs/api-reference/model-apis-llm-create-embeddings?utm_source=github_deep-searcher&utm_medium=github_readme&utm_campaign=link) (`NOVITA_API_KEY` env variable required)
 
 ### 🔹 LLM Support
 - [OpenAI](https://platform.openai.com/docs/models) (`OPENAI_API_KEY` env variable required)
@@ -452,6 +472,7 @@ nest_asyncio.apply()
 - [Google Gemini](https://ai.google.dev/gemini-api/docs) (`GEMINI_API_KEY` env variable required)
 - [SambaNova Cloud Inference Service](https://docs.together.ai/docs/introduction) (`SAMBANOVA_API_KEY` env variable required)
 - [Ollama](https://ollama.com/)
+- [Novita AI](https://novita.ai/docs/guides/introduction?utm_source=github_deep-searcher&utm_medium=github_readme&utm_campaign=link) (`NOVITA_API_KEY` env variable required)
 
 ### 🔹 Document Loader
 - Local File
