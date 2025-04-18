@@ -55,11 +55,13 @@ class UnstructuredLoader(BaseLoader):
         api_key = os.getenv("UNSTRUCTURED_API_KEY")
         api_url = os.getenv("UNSTRUCTURED_API_URL")
         use_api = api_key is not None and api_url is not None
-        
+
         if use_api:
             log.color_print("Using Unstructured API for document processing")
         else:
-            log.color_print("Using local processing for documents (UNSTRUCTURED_API_KEY or UNSTRUCTURED_API_URL not set)")
+            log.color_print(
+                "Using local processing for documents (UNSTRUCTURED_API_KEY or UNSTRUCTURED_API_URL not set)"
+            )
 
         Pipeline.from_configs(
             context=ProcessorConfig(),
@@ -135,11 +137,65 @@ class UnstructuredLoader(BaseLoader):
             including office documents, images, emails, and more.
         """
         return [
-            "abw", "bmp", "csv", "cwk", "dbf", "dif", "doc", "docm", "docx", 
-            "dot", "dotm", "eml", "epub", "et", "eth", "fods", "gif", "heic", 
-            "htm", "html", "hwp", "jpeg", "jpg", "md", "mcw", "mw", "odt", 
-            "org", "p7s", "pages", "pbd", "pdf", "png", "pot", "potm", "ppt", 
-            "pptm", "pptx", "prn", "rst", "rtf", "sdp", "sgl", "svg", "sxg", 
-            "tiff", "txt", "tsv", "uof", "uos1", "uos2", "web", "webp", "wk2", 
-            "xls", "xlsb", "xlsm", "xlsx", "xlw", "xml", "zabw"
+            "abw",
+            "bmp",
+            "csv",
+            "cwk",
+            "dbf",
+            "dif",
+            "doc",
+            "docm",
+            "docx",
+            "dot",
+            "dotm",
+            "eml",
+            "epub",
+            "et",
+            "eth",
+            "fods",
+            "gif",
+            "heic",
+            "htm",
+            "html",
+            "hwp",
+            "jpeg",
+            "jpg",
+            "md",
+            "mcw",
+            "mw",
+            "odt",
+            "org",
+            "p7s",
+            "pages",
+            "pbd",
+            "pdf",
+            "png",
+            "pot",
+            "potm",
+            "ppt",
+            "pptm",
+            "pptx",
+            "prn",
+            "rst",
+            "rtf",
+            "sdp",
+            "sgl",
+            "svg",
+            "sxg",
+            "tiff",
+            "txt",
+            "tsv",
+            "uof",
+            "uos1",
+            "uos2",
+            "web",
+            "webp",
+            "wk2",
+            "xls",
+            "xlsb",
+            "xlsm",
+            "xlsx",
+            "xlw",
+            "xml",
+            "zabw",
         ]
