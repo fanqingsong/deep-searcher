@@ -605,9 +605,6 @@ all = [
     { name = "unstructured-ingest" },
     { name = "voyageai" },
 ]
-all-docs = [
-    { name = "unstructured", extra = ["all-docs"] },
-]
 anthropic = [
     { name = "anthropic" },
 ]
@@ -637,6 +634,7 @@ togetherai = [
     { name = "together" },
 ]
 unstructured = [
+    { name = "unstructured", extra = ["all-docs"] },
     { name = "unstructured-ingest" },
 ]
 voyageai = [
@@ -671,14 +669,14 @@ requires-dist = [
     { name = "together", marker = "extra == 'llm'", specifier = ">=1.4.1" },
     { name = "together", marker = "extra == 'togetherai'", specifier = ">=1.4.1" },
     { name = "tqdm", specifier = ">=4.67.1" },
-    { name = "unstructured", extras = ["all-docs"], marker = "extra == 'all-docs'", specifier = ">=0.17.2" },
+    { name = "unstructured", extras = ["all-docs"], marker = "extra == 'unstructured'", specifier = ">=0.17.2" },
     { name = "unstructured-ingest", marker = "extra == 'file-loader'", specifier = ">=0.5.9" },
     { name = "unstructured-ingest", marker = "extra == 'unstructured'", specifier = ">=0.5.9" },
     { name = "uvicorn", specifier = ">=0.34.0" },
     { name = "voyageai", marker = "extra == 'embedding'", specifier = ">=0.3.2" },
     { name = "voyageai", marker = "extra == 'voyageai'", specifier = ">=0.3.2" },
 ]
-provides-extras = ["all", "embedding", "llm", "file-loader", "aws", "voyageai", "anthropic", "google", "ollama", "togetherai", "unstructured", "all-docs"]
+provides-extras = ["all", "embedding", "llm", "file-loader", "aws", "voyageai", "anthropic", "google", "ollama", "togetherai", "unstructured"]
 
 [package.metadata.requires-dev]
 dev = [{ name = "ruff", specifier = ">=0.9.9" }]

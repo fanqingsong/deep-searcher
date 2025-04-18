@@ -71,8 +71,6 @@ togetherai = [
 ]
 unstructured = [
     "unstructured-ingest>=0.5.9",
-]
-all-docs = [
     "unstructured[all-docs]>=0.17.2",
 ]
 
