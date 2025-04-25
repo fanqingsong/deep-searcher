@@ -1,8 +1,8 @@
 import os
 from typing import List
 
-from openai._types import NOT_GIVEN
 from openai import AzureOpenAI
+from openai._types import NOT_GIVEN
 
 from deepsearcher.embedding.base import BaseEmbedding
 
@@ -48,44 +48,44 @@ class OpenAIEmbedding(BaseEmbedding):
         # Use the provided API key or fall back to environment variable
         if api_key is None:
             api_key = os.getenv("OPENAI_API_KEY")
-            
+
         # Get model name from kwargs if provided
         if "model_name" in kwargs and (not model or model == "text-embedding-ada-002"):
             model = kwargs.pop("model_name")
-            
+
         # Get dimension
         if "dimension" in kwargs:
             dimension = kwargs.pop("dimension")
         else:
             dimension = OPENAI_MODEL_DIM_MAP.get(model, 1536)
-            
+
         self.dim = dimension
         self.model = model
-        
+
         # Debug output
-        print(f"Initializing OpenAIEmbedding with model={model}, api_version={api_version}, azure_endpoint={azure_endpoint}")
-        
+        print(
+            f"Initializing OpenAIEmbedding with model={model}, api_version={api_version}, azure_endpoint={azure_endpoint}"
+        )
+
         # Initialize Azure OpenAI client if azure_endpoint is provided
         if azure_endpoint:
             if api_version is None:
                 api_version = "2023-05-15"  # Default API version for Azure
-                
-            print(f"Using AzureOpenAI client with azure_endpoint={azure_endpoint}, api_version={api_version}")
+
+            print(
+                f"Using AzureOpenAI client with azure_endpoint={azure_endpoint}, api_version={api_version}"
+            )
             self.client = AzureOpenAI(
-                api_key=api_key,
-                api_version=api_version,
-                azure_endpoint=azure_endpoint
+                api_key=api_key, api_version=api_version, azure_endpoint=azure_endpoint
             )
             self.is_azure = True
         else:
             # Use regular OpenAI client
             from openai import OpenAI
+
             base_url = kwargs.get("base_url", os.getenv("OPENAI_BASE_URL"))
             print(f"Using OpenAI client with base_url={base_url}")
-            self.client = OpenAI(
-                api_key=api_key,
-                base_url=base_url
-            )
+            self.client = OpenAI(api_key=api_key, base_url=base_url)
             self.is_azure = False
 
     def _get_dim(self):
@@ -112,16 +112,14 @@ class OpenAIEmbedding(BaseEmbedding):
             # Handle different parameters for Azure vs regular OpenAI
             if self.is_azure:
                 response = self.client.embeddings.create(
-                    input=[text], 
-                    model=self.model  # For Azure, this is the deployment name
+                    input=[text],
+                    model=self.model,  # For Azure, this is the deployment name
                 )
             else:
                 response = self.client.embeddings.create(
-                    input=[text], 
-                    model=self.model, 
-                    dimensions=self._get_dim()
+                    input=[text], model=self.model, dimensions=self._get_dim()
                 )
-                
+
             embedding = response.data[0].embedding
             print(f"Successfully generated embedding with {len(embedding)} dimensions")
             return embedding
@@ -144,18 +142,18 @@ class OpenAIEmbedding(BaseEmbedding):
             # Handle different parameters for Azure vs regular OpenAI
             if self.is_azure:
                 response = self.client.embeddings.create(
-                    input=texts, 
-                    model=self.model  # For Azure, this is the deployment name
+                    input=texts,
+                    model=self.model,  # For Azure, this is the deployment name
                 )
             else:
                 response = self.client.embeddings.create(
-                    input=texts, 
-                    model=self.model, 
-                    dimensions=self._get_dim()
+                    input=texts, model=self.model, dimensions=self._get_dim()
                 )
-                
+
             embeddings = [r.embedding for r in response.data]
-            print(f"Successfully generated {len(embeddings)} embeddings with {len(embeddings[0]) if embeddings else 0} dimensions each")
+            print(
+                f"Successfully generated {len(embeddings)} embeddings with {len(embeddings[0]) if embeddings else 0} dimensions each"
+            )
             return embeddings
         except Exception as e:
             print(f"Error in embed_documents: {str(e)}")
