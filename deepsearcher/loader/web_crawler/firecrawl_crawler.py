@@ -84,7 +84,7 @@ class FireCrawlCrawler(BaseCrawler):
         documents = []
         for item in data:
             # Support items that are either dicts or Pydantic sub-models
-            item_dict = item.model_dump() if hasattr(item, "model_dump") else item 
+            item_dict = item.model_dump() if hasattr(item, "model_dump") else item
             markdown_content = item_dict.get("markdown", "")
             metadata = item_dict.get("metadata", {})
             metadata["reference"] = metadata.get("url", url)
