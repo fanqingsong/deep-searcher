@@ -15,6 +15,7 @@ class FireCrawlCrawler(BaseCrawler):
     into markdown format for further processing. It supports both single-page scraping
     and recursive crawling of multiple pages.
     """
+
     def __init__(self, **kwargs):
         """
         Initialize the FireCrawlCrawler.
@@ -46,7 +47,7 @@ class FireCrawlCrawler(BaseCrawler):
 
         Returns:
             List[Document]: List of Document objects with page content and metadata.
-        """        
+        """
         # Lazy init
         self.app = FirecrawlApp(api_key=os.getenv("FIRECRAWL_API_KEY"))
 
