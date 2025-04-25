@@ -55,37 +55,36 @@ class OpenAIEmbedding(BaseEmbedding):
             api_key = kwargs.pop("api_key")
         else:
             api_key = os.getenv("OPENAI_API_KEY")
-            
+
         if "base_url" in kwargs:
             base_url = kwargs.pop("base_url")
         else:
             base_url = os.getenv("OPENAI_BASE_URL")
-            
+
         if "model_name" in kwargs and (not model or model == "text-embedding-ada-002"):
             model = kwargs.pop("model_name")
-            
+
         if "dimension" in kwargs:
             dimension = kwargs.pop("dimension")
         else:
             dimension = OPENAI_MODEL_DIM_MAP.get(model, 1536)
-            
+
         self.dim = dimension
         self.model = model
-        
+
         # Initialize the appropriate client based on parameters
         if azure_endpoint:
             from openai import AzureOpenAI
+
             self.client = AzureOpenAI(
-                api_key=api_key,
-                api_version=api_version,
-                azure_endpoint=azure_endpoint,
-                **kwargs
+                api_key=api_key, api_version=api_version, azure_endpoint=azure_endpoint, **kwargs
             )
             # Store the deployment name to use for Azure
             self.deployment = azure_deployment if azure_deployment is not None else model
             self.is_azure = True
         else:
             from openai import OpenAI
+
             self.client = OpenAI(api_key=api_key, base_url=base_url, **kwargs)
             self.is_azure = False
 
@@ -111,16 +110,14 @@ class OpenAIEmbedding(BaseEmbedding):
         """
         if self.is_azure:
             response = self.client.embeddings.create(
-                input=[text], 
-                model=self.model  # For Azure, this is the deployment name
+                input=[text],
+                model=self.model,  # For Azure, this is the deployment name
             )
         else:
             response = self.client.embeddings.create(
-                input=[text], 
-                model=self.model, 
-                dimensions=self._get_dim()
+                input=[text], model=self.model, dimensions=self._get_dim()
             )
-        
+
         return response.data[0].embedding
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
@@ -135,16 +132,14 @@ class OpenAIEmbedding(BaseEmbedding):
         """
         if self.is_azure:
             response = self.client.embeddings.create(
-                input=texts, 
-                model=self.model  # For Azure, this is the deployment name
+                input=texts,
+                model=self.model,  # For Azure, this is the deployment name
             )
         else:
             response = self.client.embeddings.create(
-                input=texts, 
-                model=self.model, 
-                dimensions=self._get_dim()
+                input=texts, model=self.model, dimensions=self._get_dim()
             )
-        
+
         return [r.embedding for r in response.data]
 
     @property
