@@ -10,7 +10,7 @@
 
 ---
 
-DeepSearcher combines cutting-edge LLMs (OpenAI o1, o3-mini, DeepSeek, Grok 3, Claude 3.7 Sonnet, Llama 4, QwQ, etc.) and Vector Databases (Milvus, Zilliz Cloud etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answer and comprehensive report. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
+DeepSearcher combines cutting-edge LLMs (OpenAI o3, Qwen3, DeepSeek, Grok 3, Claude 3.7 Sonnet, Llama 4, QwQ, etc.) and Vector Databases (Milvus, Zilliz Cloud etc.) to perform search, evaluation, and reasoning based on private data, providing highly accurate answer and comprehensive report. This project is suitable for enterprise knowledge management, intelligent Q&A systems, and information retrieval scenarios.
 
 ![Architecture](./assets/pic/deep-searcher-arch.png)
 
@@ -95,7 +95,7 @@ result = query("Write a report about xxx.") # Your question here
 #### LLM Configuration
 
 <pre><code>config.set_provider_config("llm", "(LLMName)", "(Arguments dict)")</code></pre>
-<p>The "LLMName" can be one of the following: ["DeepSeek", "OpenAI", "XAI", "SiliconFlow", "PPIO", "TogetherAI", "Gemini", "Ollama", "Novita"]</p>
+<p>The "LLMName" can be one of the following: ["DeepSeek", "OpenAI", "XAI", "SiliconFlow", "Aliyun", "PPIO", "TogetherAI", "Gemini", "Ollama", "Novita"]</p>
 <p> The "Arguments dict" is a dictionary that contains the necessary arguments for the LLM class.</p>
 
 <details>
@@ -104,6 +104,21 @@ result = query("Write a report about xxx.") # Your question here
     <pre><code>config.set_provider_config("llm", "OpenAI", {"model": "o1-mini"})</code></pre>
     <p> More details about OpenAI models: https://platform.openai.com/docs/models </p>
 </details>
+
+<details>
+  <summary>Example (Qwen3 from Aliyun Bailian)</summary>
+    <p> Make sure you have prepared your Bailian API KEY as an env variable <code>DASHSCOPE_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("llm", "Aliyun", {"model": "qwen-plus-latest"})</code></pre>
+    <p> More details about Aliyun Bailian models: https://bailian.console.aliyun.com </p>
+</details>
+
+
+<details>
+  <summary>Example (Qwen3 from OpenRouter)</summary>
+    <pre><code>config.set_provider_config("llm", "OpenAI", {"model": "qwen/qwen3-235b-a22b:free", "base_url": "https://openrouter.ai/api/v1", "api_key": "OPENROUTER_API_KEY"})</code></pre>
+    <p> More details about OpenRouter models: https://openrouter.ai/qwen/qwen3-235b-a22b:free </p>
+</details>
+
 
 <details>
   <summary>Example (DeepSeek from official)</summary>
@@ -163,10 +178,10 @@ result = query("Write a report about xxx.") # Your question here
   <p> <a href="https://ollama.ai/download">Download</a> and install Ollama onto the available supported platforms (including Windows Subsystem for Linux).</p>
   <p> View a list of available models via the <a href="https://ollama.ai/library">model library</a>.</p>
   <p> Fetch available LLM models via <code>ollama pull &lt;name-of-model&gt;</code></p>
-  <p> Example: <code>ollama pull qwq</code></p>
+  <p> Example: <code>ollama pull qwen3</code></p>
   <p> To chat directly with a model from the command line, use <code>ollama run &lt;name-of-model&gt;</code>.</p>
   <p> By default, Ollama has a REST API for running and managing models on <a href="http://localhost:11434">http://localhost:11434</a>.</p>
-  <pre><code>config.set_provider_config("llm", "Ollama", {"model": "qwq"})</code></pre>
+  <pre><code>config.set_provider_config("llm", "Ollama", {"model": "qwen3"})</code></pre>
 </details>
 
 <details>
@@ -190,12 +205,7 @@ result = query("Write a report about xxx.") # Your question here
     <p> You need to install boto3 before running, execute: <code>pip install boto3</code>. More details about Amazon Bedrock: https://docs.aws.amazon.com/bedrock/ </p>
 </details>
 
-<details>
-  <summary>Example (Aliyun Bailian)</summary>
-    <p> Make sure you have prepared your Bailian API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
-    <pre><code>config.set_provider_config("llm", "OpenAI", {"model": "deepseek-r1", "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1"})</code></pre>
-    <p> More details about Aliyun Bailian models: https://bailian.console.aliyun.com </p>
-</details>
+
 
 #### Embedding Model Configuration
 <pre><code>config.set_provider_config("embedding", "(EmbeddingModelName)", "(Arguments dict)")</code></pre>
@@ -207,6 +217,16 @@ result = query("Write a report about xxx.") # Your question here
     <p> Make sure you have prepared your OpenAI API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
     <pre><code>config.set_provider_config("embedding", "OpenAIEmbedding", {"model": "text-embedding-3-small"})</code></pre>
     <p> More details about OpenAI models: https://platform.openai.com/docs/guides/embeddings/use-cases </p>
+</details>
+
+<details>
+  <summary>Example (OpenAI embedding Azure)</summary>
+    <p> Make sure you have prepared your OpenAI API KEY as an env variable <code>OPENAI_API_KEY</code>.</p>
+    <pre><code>config.set_provider_config("embedding", "OpenAIEmbedding", {
+    "model": "text-embedding-ada-002",
+    "azure_endpoint": "https://<youraifoundry>.openai.azure.com/",
+    "api_version": "2023-05-15"
+})</code></pre>
 </details>
 
 <details>
@@ -311,6 +331,18 @@ result = query("Write a report about xxx.") # Your question here
             target="_blank">Public Endpoint and API Key</a> in Zilliz Cloud.
         </li>
     </ul>
+
+</details>
+
+<details>
+  <summary>Example (AZURE AI Search)</summary>
+    <pre><code>config.set_provider_config("vector_db", "AzureSearch", {
+    "endpoint": "https://<yourazureaisearch>.search.windows.net",
+    "index_name": "<yourindex>",
+    "api_key": "<yourkey>",
+    "vector_field": ""
+})</code></pre>
+    <p> More details about Milvus Config:</p>
 
 </details>
 
