@@ -81,7 +81,8 @@ nav:
     - "Web Crawler": configuration/web_crawler.md
   - Modules:
     - "Module Support": integrations/index.md
-
+  - Future Plans:
+    - "Future Plans": future_plans.md
 
 markdown_extensions:
   - pymdownx.superfences
