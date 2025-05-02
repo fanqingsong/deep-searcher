@@ -3,10 +3,18 @@ name: "Run Docs CI with UV"
 on:
   pull_request:
     types: [opened, reopened, synchronize]
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - '.github/workflows/docs.yml'
   push:
     branches:
       - "**"
       - "!gh-pages"
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - '.github/workflows/docs.yml'
 
 jobs:
   build-docs:
