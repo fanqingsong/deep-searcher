@@ -79,7 +79,10 @@ nav:
     - "Vector Database": configuration/vector_db.md
     - "File Loader": configuration/file_loader.md
     - "Web Crawler": configuration/web_crawler.md
-
+  - Modules:
+    - "Module Support": integrations/index.md
+  - Future Plans:
+    - "Future Plans": future_plans.md
 
 markdown_extensions:
   - pymdownx.superfences
