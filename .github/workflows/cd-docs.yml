@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-deploy-docs:
-    if: github.repository == 'jinhonglin-ryan/deep-searcher'
+    if: github.repository == 'zilliztech/deep-searcher'
     uses: ./.github/workflows/docs.yml
     with:
       deploy: true
