@@ -176,6 +176,7 @@ class Milvus(BaseVectorDB):
         collection: Optional[str],
         vector: Union[np.array, List[float]],
         top_k: int = 5,
+        query_text: Optional[str] = None,
         *args,
         **kwargs,
     ) -> List[RetrievalResult]:
@@ -186,9 +187,9 @@ class Milvus(BaseVectorDB):
             collection (Optional[str]): Collection name. If None, uses default_collection.
             vector (Union[np.array, List[float]]): Query vector for similarity search.
             top_k (int, optional): Number of results to return. Defaults to 5.
+            query_text (Optional[str], optional): Original query text for hybrid search. Defaults to None.
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
-                query_text (str, optional): Original query text for hybrid search.
 
         Returns:
             List[RetrievalResult]: List of retrieval results containing similar vectors.
@@ -196,7 +197,6 @@ class Milvus(BaseVectorDB):
         if not collection:
             collection = self.default_collection
         try:
-            query_text = kwargs.get("query_text")
             use_hybrid = self.hybrid and query_text
 
             if use_hybrid:
