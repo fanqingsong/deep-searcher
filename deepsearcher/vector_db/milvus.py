@@ -67,6 +67,9 @@ class Milvus(BaseVectorDB):
             collection = self.default_collection
         if description is None:
             description = ""
+
+        self.metric_type = metric_type
+
         try:
             has_collection = self.client.has_collection(collection, timeout=5)
             if force_new_collection and has_collection:
@@ -202,7 +205,7 @@ class Milvus(BaseVectorDB):
                     [query_text], "sparse_vector", sparse_search_params, limit=top_k
                 )
 
-                dense_search_params = {"metric_type": "L2"}
+                dense_search_params = {"metric_type": self.metric_type}
                 dense_request = AnnSearchRequest(
                     [vector], "embedding", dense_search_params, limit=top_k
                 )
