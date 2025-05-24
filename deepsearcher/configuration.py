@@ -38,6 +38,8 @@ class Configuration:
         self.provide_settings = config_data["provide_settings"]
         self.query_settings = config_data["query_settings"]
         self.load_settings = config_data["load_settings"]
+        # Load LLM tracing setting from query_settings if available
+        self._llm_tracing_enabled = self.query_settings.get("llm_tracing", False)
 
     def load_config_from_yaml(self, config_path: str):
         """
@@ -87,6 +89,24 @@ class Configuration:
             raise ValueError(f"Unsupported feature: {feature}")
 
         return self.provide_settings[feature]
+
+    @property
+    def llm_tracing(self) -> bool:
+        """Get the current LLM tracing status"""
+        return self._llm_tracing_enabled
+
+    @llm_tracing.setter
+    def llm_tracing(self, enabled: bool):
+        """
+        Enable or disable LLM tracing.
+
+        When enabled, LangSmith tracing will automatically use LANGSMITH_API_KEY
+        and LANGSMITH_PROJECT environment variables.
+
+        Args:
+            enabled: Whether to enable LLM tracing
+        """
+        self._llm_tracing_enabled = enabled
 
 
 class ModuleFactory:
@@ -202,6 +222,12 @@ def init_config(config: Configuration):
         web_crawler, \
         default_searcher, \
         naive_rag
+
+    if config.llm_tracing:
+        from deepsearcher.llm_tracer import configure_langsmith
+
+        configure_langsmith()
+
     module_factory = ModuleFactory(config)
     llm = module_factory.create_llm()
     embedding_model = module_factory.create_embedding()

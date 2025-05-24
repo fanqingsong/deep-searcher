@@ -59,6 +59,7 @@ all = [
     "docling-core>=2.30.0",
     "crawl4ai>=0.6.2",
     "sentence-transformers>=4.1.0",
+    "langsmith>=0.3.42",
 ]
 
 voyageai = [
@@ -107,6 +108,10 @@ crawl4ai = [
 sentence-transformers = [
     "sentence-transformers>=4.1.0",
 ]
+langsmith = [
+    "langsmith>=0.3.42",
+]
+
 
 
 [build-system]
