@@ -136,10 +136,8 @@ class TestWatsonXEmbedding(unittest.TestCase):
 
         mock_credentials_instance = MagicMock()
         mock_embeddings_instance = MagicMock()
-        mock_embeddings_instance.embed_query.return_value = {
-            'results': [{'embedding': [0.1] * 768}]
-        }
-
+        # WatsonX embed_query returns the embedding vector directly, not wrapped in a dict
+        mock_embeddings_instance.embed_query.return_value = [0.1] * 768
         mock_credentials_class.return_value = mock_credentials_instance
         mock_embeddings_class.return_value = mock_embeddings_instance
 
@@ -153,7 +151,7 @@ class TestWatsonXEmbedding(unittest.TestCase):
         result = embedding.embed_query(query)
 
         # Verify that embed_query was called correctly
-        mock_embeddings_instance.embed_query.assert_called_once_with([query])
+        mock_embeddings_instance.embed_query.assert_called_once_with(text=query)
 
         # Check the result
         self.assertEqual(result, [0.1] * 768)
@@ -171,14 +169,12 @@ class TestWatsonXEmbedding(unittest.TestCase):
 
         mock_credentials_instance = MagicMock()
         mock_embeddings_instance = MagicMock()
-        mock_embeddings_instance.embed_documents.return_value = {
-            'results': [
-                {'embedding': [0.1] * 768},
-                {'embedding': [0.2] * 768},
-                {'embedding': [0.3] * 768}
-            ]
-        }
-
+        # WatsonX embed_documents returns a list of embedding vectors directly
+        mock_embeddings_instance.embed_documents.return_value = [
+            [0.1] * 768,
+            [0.2] * 768,
+            [0.3] * 768
+        ]
         mock_credentials_class.return_value = mock_credentials_instance
         mock_embeddings_class.return_value = mock_embeddings_instance
 
@@ -192,7 +188,7 @@ class TestWatsonXEmbedding(unittest.TestCase):
         results = embedding.embed_documents(documents)
 
         # Verify that embed_documents was called correctly
-        mock_embeddings_instance.embed_documents.assert_called_once_with(documents)
+        mock_embeddings_instance.embed_documents.assert_called_once_with(texts=documents)
 
         # Check the results
         self.assertEqual(len(results), 3)

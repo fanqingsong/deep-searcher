@@ -81,8 +81,12 @@ class WatsonXEmbedding(BaseEmbedding):
         # Get credentials from environment or kwargs
         api_key = kwargs.pop("api_key", os.getenv("WATSONX_APIKEY"))
         url = kwargs.pop("url", os.getenv("WATSONX_URL"))
-        project_id = kwargs.pop("project_id", os.getenv("WATSONX_PROJECT_ID"))
+        project_id = kwargs.pop("project_id", None)
         space_id = kwargs.pop("space_id", None)
+
+        # Only get project_id from environment if neither project_id nor space_id were provided
+        if project_id is None and space_id is None:
+            project_id = os.getenv("WATSONX_PROJECT_ID")
 
         if not api_key:
             raise ValueError("WATSONX_APIKEY environment variable or api_key parameter is required")
@@ -96,14 +100,14 @@ class WatsonXEmbedding(BaseEmbedding):
         # Set up credentials
         credentials = Credentials(url=url, api_key=api_key)
 
-        # Initialize the embeddings client
-        if project_id:
+        # Initialize the embeddings client - prioritize space_id if provided
+        if space_id:
             self.client = Embeddings(
-                model_id=self.model, credentials=credentials, project_id=project_id
+                model_id=self.model, credentials=credentials, space_id=space_id
             )
         else:
             self.client = Embeddings(
-                model_id=self.model, credentials=credentials, space_id=space_id
+                model_id=self.model, credentials=credentials, project_id=project_id
             )
 
         # Get dimension for this model
@@ -240,9 +244,9 @@ class WatsonXEmbedding(BaseEmbedding):
                     f"Query text was truncated from {len(text)} to {len(truncated_text)} characters"
                 )
 
-            response = self.client.embed_query([truncated_text])
-            # embed_query expects a list and returns a dict with 'results'
-            return response['results'][0]['embedding']
+            # The embed_query method expects a single string and returns a list of floats directly
+            response = self.client.embed_query(text=truncated_text)
+            return response
         except Exception as e:
             raise RuntimeError(f"Error embedding query with WatsonX: {str(e)}")
 
@@ -275,11 +279,11 @@ class WatsonXEmbedding(BaseEmbedding):
                     f"Truncated {truncation_count} out of {len(texts)} documents to fit token limits"
                 )
 
-            response = self.client.embed_documents(truncated_texts)
-            # embed_documents returns a dict with 'results' containing list of embedding objects
-            return [result['embedding'] for result in response['results']]
+            # The embed_documents method expects a list of strings and returns a list of embedding vectors directly
+            response = self.client.embed_documents(texts=truncated_texts)
+            return response
         except Exception as e:
-            raise RuntimeError(f"Error embedding documents with WatsonX: {str(e)}")
+                raise RuntimeError(f"Error embedding documents with WatsonX: {str(e)}")
 
     def _embed_documents_individually(self, texts: List[str]) -> List[List[float]]:
         """
@@ -301,9 +305,8 @@ class WatsonXEmbedding(BaseEmbedding):
                 truncated_text = self._truncate_text(text)
                 self.max_tokens = original_max
 
-                # Try to embed single text using embed_query API
-                response = self.client.embed_query([truncated_text])
-                embedding = response['results'][0]['embedding']
+                # Try to embed single text using embed_query API - it returns the embedding directly
+                embedding = self.client.embed_query(text=truncated_text)
                 embeddings.append(embedding)
             except Exception as e:
                 failed_count += 1

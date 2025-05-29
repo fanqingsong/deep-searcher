@@ -56,8 +56,12 @@ class WatsonX(BaseLLM):
         # Get credentials from environment or kwargs
         api_key = kwargs.pop("api_key", os.getenv("WATSONX_APIKEY"))
         url = kwargs.pop("url", os.getenv("WATSONX_URL"))
-        project_id = kwargs.pop("project_id", os.getenv("WATSONX_PROJECT_ID"))
+        project_id = kwargs.pop("project_id", None)
         space_id = kwargs.pop("space_id", None)
+
+        # Only get project_id from environment if neither project_id nor space_id were provided
+        if project_id is None and space_id is None:
+            project_id = os.getenv("WATSONX_PROJECT_ID")
 
         if not api_key:
             raise ValueError("WATSONX_APIKEY environment variable or api_key parameter is required")
@@ -71,14 +75,14 @@ class WatsonX(BaseLLM):
         # Set up credentials
         credentials = Credentials(url=url, api_key=api_key)
 
-        # Initialize the model inference client
-        if project_id:
+        # Initialize the model inference client - prioritize space_id if provided
+        if space_id:
             self.client = ModelInference(
-                model_id=self.model, credentials=credentials, project_id=project_id
+                model_id=self.model, credentials=credentials, space_id=space_id
             )
         else:
             self.client = ModelInference(
-                model_id=self.model, credentials=credentials, space_id=space_id
+                model_id=self.model, credentials=credentials, project_id=project_id
             )
 
         # Set up generation parameters
