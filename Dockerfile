@@ -1,32 +1,19 @@
-FROM python:3.10-slim
+FROM ghcr.io/astral-sh/uv:python3.10-bookworm-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
-    gcc \
-    g++ \
-    && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /tmp/uv-cache /app/data /app/logs
 
-COPY pyproject.toml ./
-COPY uv.lock ./
+COPY pyproject.toml uv.lock LICENSE README.md ./
+COPY deepsearcher/ ./deepsearcher/
 
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir uv
-
-RUN uv pip install --system -r pyproject.toml
+RUN uv sync 
 
 COPY . .
 
-RUN pip install --no-cache-dir -e .
-
-RUN mkdir -p /app/data /app/logs
-
 EXPOSE 8000
-
-ENV PYTHONPATH=/app
-ENV MILVUS_DATA_PATH=/app/data
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/docs || exit 1
 
-CMD ["python", "main.py", "--enable-cors", "true"] 
+CMD ["uv", "run", "python", "main.py", "--enable-cors", "true"] 
