@@ -283,7 +283,7 @@ class WatsonXEmbedding(BaseEmbedding):
             response = self.client.embed_documents(texts=truncated_texts)
             return response
         except Exception as e:
-                raise RuntimeError(f"Error embedding documents with WatsonX: {str(e)}")
+            raise RuntimeError(f"Error embedding documents with WatsonX: {str(e)}")
 
     def _embed_documents_individually(self, texts: List[str]) -> List[List[float]]:
         """
