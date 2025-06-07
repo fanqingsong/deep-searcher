@@ -6,6 +6,7 @@ from fastapi import Body, FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from deepsearcher import configuration
 from deepsearcher.configuration import Configuration, init_config
 from deepsearcher.offline_loading import load_from_local_files, load_from_website
 from deepsearcher.online_query import query
@@ -30,6 +31,13 @@ class ProviderConfigRequest(BaseModel):
     feature: str
     provider: str
     config: Dict
+
+
+class PartitionRequest(BaseModel):
+    """Request model for partition operations."""
+
+    collection_name: str | None = None
+    partition_name: str
 
 
 @app.post("/set-provider-config/")
@@ -80,6 +88,11 @@ def load_files(
         description="Optional batch size for the collection.",
         examples=[256],
     ),
+    partition_name: str = Body(
+        "global",
+        description="Partition name to store documents.",
+        examples=["train"],
+    ),
 ):
     """
     Load files into the vector database.
@@ -102,6 +115,7 @@ def load_files(
             collection_name=collection_name,
             collection_description=collection_description,
             batch_size=batch_size,
+            partition_name=partition_name,
         )
         return {"message": "Files loaded successfully."}
     except Exception as e:
@@ -130,6 +144,11 @@ def load_website(
         description="Optional batch size for the collection.",
         examples=[256],
     ),
+    partition_name: str = Body(
+        "global",
+        description="Partition name to store documents.",
+        examples=["train"],
+    ),
 ):
     """
     Load website content into the vector database.
@@ -152,6 +171,7 @@ def load_website(
             collection_name=collection_name,
             collection_description=collection_description,
             batch_size=batch_size,
+            partition_name=partition_name,
         )
         return {"message": "Website loaded successfully."}
     except Exception as e:
@@ -171,6 +191,11 @@ def perform_query(
         ge=1,
         examples=[3],
     ),
+    partitions: str | None = Query(
+        None,
+        description="Comma separated partitions to search in.",
+        examples=["global,train"],
+    ),
 ):
     """
     Perform a query against the loaded data.
@@ -186,8 +211,39 @@ def perform_query(
         HTTPException: If the query fails.
     """
     try:
-        result_text, _, consume_token = query(original_query, max_iter)
+        parts = [p.strip() for p in partitions.split(",")] if partitions else None
+        result_text, _, consume_token = query(original_query, max_iter, parts)
         return {"result": result_text, "consume_token": consume_token}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/create-partition/")
+def create_partition(request: PartitionRequest):
+    """Create a new partition in a collection."""
+    try:
+        configuration.vector_db.create_partition(request.collection_name, request.partition_name)
+        return {"message": "Partition created"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/list-partitions/")
+def list_partitions(collection_name: str | None = None):
+    """List partitions for a collection."""
+    try:
+        parts = configuration.vector_db.list_partitions(collection_name)
+        return {"partitions": parts}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.delete("/drop-partition/")
+def drop_partition(request: PartitionRequest):
+    """Remove a partition from a collection."""
+    try:
+        configuration.vector_db.drop_partition(request.collection_name, request.partition_name)
+        return {"message": "Partition dropped"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
