@@ -141,7 +141,7 @@ provide_settings:
     provider: "Milvus"
     config:
       default_collection: "deepsearcher"
-      uri: "./milvus.db"
+      uri: "http://localhost:19530"
       token: "root:Milvus"
       db: "default"
 

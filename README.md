@@ -330,7 +330,7 @@ result = query("Write a report about xxx.") # Your question here
 
 <details>
   <summary>Example (Milvus)</summary>
-    <pre><code>config.set_provider_config("vector_db", "Milvus", {"uri": "./milvus.db", "token": ""})</code></pre>
+    <pre><code>config.set_provider_config("vector_db", "Milvus", {"uri": "http://localhost:19530", "token": ""})</code></pre>
     <p> More details about Milvus Config:</p>
     <ul>
         <li>

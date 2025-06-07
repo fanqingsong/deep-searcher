@@ -41,7 +41,6 @@ DeepSearcher supports various integrations through optional dependencies.
 | Integration | Command | Description |
 |-------------|---------|-------------|
 | Ollama | `pip install "deepsearcher[ollama]"` | For local LLM deployment |
-| All extras | `pip install "deepsearcher[all]"` | Installs all optional dependencies |
 
 ## ✅ Verify Installation
 

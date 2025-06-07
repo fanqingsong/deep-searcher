@@ -14,7 +14,7 @@ Currently supported vector databases:
 ## 🔍 Milvus Configuration
 
 ```python
-config.set_provider_config("vector_db", "Milvus", {"uri": "./milvus.db", "token": ""})
+config.set_provider_config("vector_db", "Milvus", {"uri": "http://localhost:19530", "token": ""})
 ```
 
 ### Deployment Options
