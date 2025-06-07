@@ -1,11 +1,15 @@
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 # from deepsearcher.configuration import vector_db, embedding_model, llm
 from deepsearcher import configuration
 from deepsearcher.vector_db.base import RetrievalResult
 
 
-def query(original_query: str, max_iter: int = 3) -> Tuple[str, List[RetrievalResult], int]:
+def query(
+    original_query: str,
+    max_iter: int = 3,
+    partitions: Optional[List[str]] = None,
+) -> Tuple[str, List[RetrievalResult], int]:
     """
     Query the knowledge base with a question and get an answer.
 
@@ -23,11 +27,17 @@ def query(original_query: str, max_iter: int = 3) -> Tuple[str, List[RetrievalRe
             - The number of tokens consumed during the process
     """
     default_searcher = configuration.default_searcher
-    return default_searcher.query(original_query, max_iter=max_iter)
+    return default_searcher.query(
+        original_query,
+        max_iter=max_iter,
+        partitions=partitions,
+    )
 
 
 def retrieve(
-    original_query: str, max_iter: int = 3
+    original_query: str,
+    max_iter: int = 3,
+    partitions: Optional[List[str]] = None,
 ) -> Tuple[List[RetrievalResult], List[str], int]:
     """
     Retrieve relevant information from the knowledge base without generating an answer.
@@ -47,12 +57,17 @@ def retrieve(
     """
     default_searcher = configuration.default_searcher
     retrieved_results, consume_tokens, metadata = default_searcher.retrieve(
-        original_query, max_iter=max_iter
+        original_query, max_iter=max_iter, partitions=partitions
     )
     return retrieved_results, [], consume_tokens
 
 
-def naive_retrieve(query: str, collection: str = None, top_k=10) -> List[RetrievalResult]:
+def naive_retrieve(
+    query: str,
+    collection: str = None,
+    top_k: int = 10,
+    partitions: Optional[List[str]] = None,
+) -> List[RetrievalResult]:
     """
     Perform a simple retrieval from the knowledge base using the naive RAG approach.
 
@@ -68,12 +83,15 @@ def naive_retrieve(query: str, collection: str = None, top_k=10) -> List[Retriev
         A list of retrieval results.
     """
     naive_rag = configuration.naive_rag
-    all_retrieved_results, consume_tokens, _ = naive_rag.retrieve(query)
+    all_retrieved_results, consume_tokens, _ = naive_rag.retrieve(query, partitions=partitions)
     return all_retrieved_results
 
 
 def naive_rag_query(
-    query: str, collection: str = None, top_k=10
+    query: str,
+    collection: str = None,
+    top_k: int = 10,
+    partitions: Optional[List[str]] = None,
 ) -> Tuple[str, List[RetrievalResult]]:
     """
     Query the knowledge base using the naive RAG approach and get an answer.
@@ -92,5 +110,5 @@ def naive_rag_query(
             - A list of retrieval results that were used to generate the answer
     """
     naive_rag = configuration.naive_rag
-    answer, retrieved_results, consume_tokens = naive_rag.query(query)
+    answer, retrieved_results, consume_tokens = naive_rag.query(query, partitions=partitions)
     return answer, retrieved_results

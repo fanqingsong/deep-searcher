@@ -136,6 +136,22 @@ class TestMilvus(unittest.TestCase):
             self.assertIsInstance(collections, list)
             self.assertGreaterEqual(len(collections), 0)
 
+    def test_partitions(self):
+        """Test partition management."""
+        milvus = Milvus(uri="./milvus.db")
+        collection = "hello_deepsearcher"
+        partition = "test_part"
+        try:
+            milvus.create_partition(collection, partition)
+            parts = milvus.list_partitions(collection)
+            milvus.drop_partition(collection, partition)
+            self.assertIsInstance(parts, list)
+            test_passed = True
+        except Exception as e:
+            test_passed = False
+            print(f"Error: {e}")
+        self.assertTrue(test_passed, "partition management should work")
+
 
 if __name__ == "__main__":
     unittest.main() 

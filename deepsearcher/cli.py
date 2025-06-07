@@ -50,6 +50,12 @@ def main():
         default=3,
         help="Max iterations of reflection. Default is 3.",
     )
+    query_parser.add_argument(
+        "--partition",
+        type=str,
+        default=None,
+        help="Partition name(s) to search in, separated by comma if multiple.",
+    )
 
     ## Arguments of loading
     load_parser = subparsers.add_parser(
@@ -85,10 +91,19 @@ def main():
         default=False,
         help="If you want to drop origin collection and create a new collection on every load, set to True",
     )
+    load_parser.add_argument(
+        "--partition",
+        type=str,
+        default="global",
+        help="Partition name to store documents.",
+    )
 
     args = parser.parse_args()
     if args.subcommand == "query":
-        final_answer, refs, consumed_tokens = query(args.query, max_iter=args.max_iter)
+        partitions = [p.strip() for p in args.partition.split(",")] if args.partition else None
+        final_answer, refs, consumed_tokens = query(
+            args.query, max_iter=args.max_iter, partitions=partitions
+        )
         log.color_print("\n==== FINAL ANSWER====\n")
         log.color_print(final_answer)
         log.color_print("\n### References\n")
@@ -106,6 +121,8 @@ def main():
             kwargs["force_new_collection"] = args.force_new_collection
         if args.batch_size:
             kwargs["batch_size"] = args.batch_size
+        if args.partition:
+            kwargs["partition_name"] = args.partition
         if len(urls) > 0:
             load_from_website(urls, **kwargs)
         if len(local_files) > 0:

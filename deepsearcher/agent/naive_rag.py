@@ -87,6 +87,7 @@ class NaiveRAG(RAGAgent):
                 vector=self.embedding_model.embed_query(query),
                 top_k=max(self.top_k // len(selected_collections), 1),
                 query_text=query,
+                partitions=kwargs.get("partitions"),
             )
             all_retrieved_results.extend(retrieval_res)
         all_retrieved_results = deduplicate_results(all_retrieved_results)
@@ -109,7 +110,7 @@ class NaiveRAG(RAGAgent):
                 - A list of retrieved document results
                 - The total token usage
         """
-        all_retrieved_results, n_token_retrieval, _ = self.retrieve(query)
+        all_retrieved_results, n_token_retrieval, _ = self.retrieve(query, **kwargs)
         chunk_texts = []
         for chunk in all_retrieved_results:
             if self.text_window_splitter and "wider_text" in chunk.metadata:

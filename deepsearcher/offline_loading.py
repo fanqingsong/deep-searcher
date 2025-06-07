@@ -13,6 +13,7 @@ def load_from_local_files(
     collection_name: str = None,
     collection_description: str = None,
     force_new_collection: bool = False,
+    partition_name: str = "global",
     chunk_size: int = 1500,
     chunk_overlap: int = 100,
     batch_size: int = 256,
@@ -66,7 +67,12 @@ def load_from_local_files(
     )
 
     chunks = embedding_model.embed_chunks(chunks, batch_size=batch_size)
-    vector_db.insert_data(collection=collection_name, chunks=chunks)
+    vector_db.create_partition(collection_name, partition_name)
+    vector_db.insert_data(
+        collection=collection_name,
+        chunks=chunks,
+        partition=partition_name,
+    )
 
 
 def load_from_website(
@@ -74,6 +80,7 @@ def load_from_website(
     collection_name: str = None,
     collection_description: str = None,
     force_new_collection: bool = False,
+    partition_name: str = "global",
     chunk_size: int = 1500,
     chunk_overlap: int = 100,
     batch_size: int = 256,
@@ -116,4 +123,9 @@ def load_from_website(
         chunk_overlap=chunk_overlap,
     )
     chunks = embedding_model.embed_chunks(chunks, batch_size=batch_size)
-    vector_db.insert_data(collection=collection_name, chunks=chunks)
+    vector_db.create_partition(collection_name, partition_name)
+    vector_db.insert_data(
+        collection=collection_name,
+        chunks=chunks,
+        partition=partition_name,
+    )

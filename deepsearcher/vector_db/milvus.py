@@ -132,6 +132,7 @@ class Milvus(BaseVectorDB):
                 index_params=index_params,
                 consistency_level="Strong",
             )
+            self.create_partition(collection=collection, partition="global")
             log.color_print(f"create collection [{collection}] successfully")
         except Exception as e:
             log.critical(f"fail to init db for milvus, error info: {e}")
@@ -141,6 +142,7 @@ class Milvus(BaseVectorDB):
         collection: Optional[str],
         chunks: List[Chunk],
         batch_size: int = 256,
+        partition: str = "global",
         *args,
         **kwargs,
     ):
@@ -175,7 +177,11 @@ class Milvus(BaseVectorDB):
         batch_datas = [datas[i : i + batch_size] for i in range(0, len(datas), batch_size)]
         try:
             for batch_data in batch_datas:
-                self.client.insert(collection_name=collection, data=batch_data)
+                self.client.insert(
+                    collection_name=collection,
+                    data=batch_data,
+                    partition_name=partition,
+                )
         except Exception as e:
             log.critical(f"fail to insert data, error info: {e}")
 
@@ -184,6 +190,7 @@ class Milvus(BaseVectorDB):
         collection: Optional[str],
         vector: Union[np.array, List[float]],
         top_k: int = 5,
+        partitions: Optional[Union[str, List[str]]] = None,
         query_text: Optional[str] = None,
         *args,
         **kwargs,
@@ -223,6 +230,7 @@ class Milvus(BaseVectorDB):
                     reqs=[sparse_request, dense_request],
                     ranker=RRFRanker(),
                     limit=top_k,
+                    partition_names=[partitions] if isinstance(partitions, str) else partitions,
                     output_fields=["embedding", "text", "reference", "metadata"],
                     timeout=10,
                 )
@@ -231,6 +239,7 @@ class Milvus(BaseVectorDB):
                     collection_name=collection,
                     data=[vector],
                     limit=top_k,
+                    partition_names=[partitions] if isinstance(partitions, str) else partitions,
                     output_fields=["embedding", "text", "reference", "metadata"],
                     timeout=10,
                 )
@@ -303,3 +312,36 @@ class Milvus(BaseVectorDB):
             self.client.drop_collection(collection)
         except Exception as e:
             log.warning(f"fail to clear db, error info: {e}")
+
+    def create_partition(self, collection: Optional[str], partition: str, *args, **kwargs) -> None:
+        """Create a partition in the given collection if it doesn't exist."""
+        if not collection:
+            collection = self.default_collection
+        try:
+            if not self.client.has_partition(collection, partition):
+                self.client.create_partition(collection, partition)
+        except Exception as e:
+            log.warning(f"fail to create partition, error info: {e}")
+
+    def list_partitions(self, collection: Optional[str], *args, **kwargs) -> List[str]:
+        """List all partitions for a collection."""
+        if not collection:
+            collection = self.default_collection
+        try:
+            partitions = self.client.list_partitions(collection)
+            return [
+                p if isinstance(p, str) else p["name"] if isinstance(p, dict) else p.name
+                for p in partitions
+            ]
+        except Exception as e:
+            log.warning(f"fail to list partitions, error info: {e}")
+            return []
+
+    def drop_partition(self, collection: Optional[str], partition: str, *args, **kwargs) -> None:
+        """Drop a partition from a collection."""
+        if not collection:
+            collection = self.default_collection
+        try:
+            self.client.drop_partition(collection, partition)
+        except Exception as e:
+            log.warning(f"fail to drop partition, error info: {e}")

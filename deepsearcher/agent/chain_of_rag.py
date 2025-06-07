@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
 from deepsearcher.agent.base import RAGAgent, describe_class
 from deepsearcher.agent.collection_router import CollectionRouter
@@ -133,7 +133,9 @@ class ChainOfRAG(RAGAgent):
         )
         return self.llm.remove_think(chat_response.content), chat_response.total_tokens
 
-    def _retrieve_and_answer(self, query: str) -> Tuple[str, List[RetrievalResult], int]:
+    def _retrieve_and_answer(
+        self, query: str, partitions: Optional[List[str]] = None
+    ) -> Tuple[str, List[RetrievalResult], int]:
         consume_tokens = 0
         if self.route_collection:
             selected_collections, n_token_route = self.collection_router.invoke(
@@ -148,7 +150,10 @@ class ChainOfRAG(RAGAgent):
             log.color_print(f"<search> Search [{query}] in [{collection}]...  </search>\n")
             query_vector = self.embedding_model.embed_query(query)
             retrieved_results = self.vector_db.search_data(
-                collection=collection, vector=query_vector, query_text=query
+                collection=collection,
+                vector=query_vector,
+                query_text=query,
+                partitions=partitions,
             )
             all_retrieved_results.extend(retrieved_results)
         all_retrieved_results = deduplicate_results(all_retrieved_results)
@@ -245,7 +250,7 @@ class ChainOfRAG(RAGAgent):
             log.color_print(f">> Iteration: {iter + 1}\n")
             followup_query, n_token0 = self._reflect_get_subquery(query, intermediate_contexts)
             intermediate_answer, retrieved_results, n_token1 = self._retrieve_and_answer(
-                followup_query
+                followup_query, partitions=kwargs.get("partitions")
             )
             supported_retrieved_results, n_token2 = self._get_supported_docs(
                 retrieved_results, followup_query, intermediate_answer
