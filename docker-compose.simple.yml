@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # DeepSearcher application with Milvus Lite (local storage)
+  deep-searcher:
+    build: .
+    container_name: deep-searcher-app
+    ports:
+      - "8000:8000"
+    environment:
+      # OpenAI API Key (required if using OpenAI models)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      
+      # DeepSeek API Key (required if using DeepSeek models)
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      
+      # SiliconFlow API Key (required if using SiliconFlow models)
+      - SILICONFLOW_API_KEY=${SILICONFLOW_API_KEY}
+      
+      # PPIO API Key (required if using PPIO models)
+      - PPIO_API_KEY=${PPIO_API_KEY}
+      
+      # Together AI API Key (required if using Together AI models)
+      - TOGETHER_API_KEY=${TOGETHER_API_KEY}
+      
+      # XAI API Key (required if using XAI Grok models)
+      - XAI_API_KEY=${XAI_API_KEY}
+      
+      # Anthropic API Key (required if using Claude models)
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      
+      # Gemini API Key (required if using Gemini models)
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      
+      # Voyage API Key (required if using Voyage embeddings)
+      - VOYAGE_API_KEY=${VOYAGE_API_KEY}
+      
+      # FireCrawl API Key (required if using web crawling features)
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
+      
+      # Aliyun Bailian API Key (required if using Qwen models from Aliyun)
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY}
+      
+      # Azure OpenAI Configuration (required if using Azure OpenAI)
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_KEY=${AZURE_OPENAI_KEY}
+      
+      # AWS Credentials (required if using AWS Bedrock)
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      
+      # Novita API Key (required if using Novita models)
+      - NOVITA_API_KEY=${NOVITA_API_KEY}
+      
+      # GLM API Key (required if using GLM models)
+      - GLM_API_KEY=${GLM_API_KEY}
+      
+      # Volcengine API Key (required if using Volcengine models)
+      - VOLCENGINE_API_KEY=${VOLCENGINE_API_KEY}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./milvus_data:/app/milvus_data  # Milvus Lite data storage
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped 

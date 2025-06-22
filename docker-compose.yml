@@ -1,0 +1,164 @@
+version: '3.8'
+
+services:
+  # Milvus dependencies
+  etcd:
+    container_name: milvus-etcd
+    image: quay.io/coreos/etcd:v3.5.5
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=1000
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+      - ETCD_SNAPSHOT_COUNT=50000
+    volumes:
+      - etcd_data:/etcd
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - milvus_network
+
+  minio:
+    container_name: milvus-minio
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+    volumes:
+      - minio_data:/data
+    command: minio server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - milvus_network
+
+  # Milvus standalone
+  milvus:
+    container_name: milvus-standalone
+    image: milvusdb/milvus:v2.4.15
+    command: ["milvus", "run", "standalone"]
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+    volumes:
+      - milvus_data:/var/lib/milvus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    depends_on:
+      - "etcd"
+      - "minio"
+    networks:
+      - milvus_network
+
+  # DeepSearcher application
+  deep-searcher:
+    build: .
+    container_name: deep-searcher-app
+    ports:
+      - "8000:8000"
+    environment:
+      # OpenAI API Key (required if using OpenAI models)
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      
+      # DeepSeek API Key (required if using DeepSeek models)
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      
+      # SiliconFlow API Key (required if using SiliconFlow models)
+      - SILICONFLOW_API_KEY=${SILICONFLOW_API_KEY}
+      
+      # PPIO API Key (required if using PPIO models)
+      - PPIO_API_KEY=${PPIO_API_KEY}
+      
+      # Together AI API Key (required if using Together AI models)
+      - TOGETHER_API_KEY=${TOGETHER_API_KEY}
+      
+      # XAI API Key (required if using XAI Grok models)
+      - XAI_API_KEY=${XAI_API_KEY}
+      
+      # Anthropic API Key (required if using Claude models)
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      
+      # Gemini API Key (required if using Gemini models)
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      
+      # Voyage API Key (required if using Voyage embeddings)
+      - VOYAGE_API_KEY=${VOYAGE_API_KEY}
+      
+      # FireCrawl API Key (required if using web crawling features)
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
+      
+      # Aliyun Bailian API Key (required if using Qwen models from Aliyun)
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY}
+      
+      # Azure OpenAI Configuration (required if using Azure OpenAI)
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - AZURE_OPENAI_KEY=${AZURE_OPENAI_KEY}
+      
+      # AWS Credentials (required if using AWS Bedrock)
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      
+      # Novita API Key (required if using Novita models)
+      - NOVITA_API_KEY=${NOVITA_API_KEY}
+      
+      # GLM API Key (required if using GLM models)
+      - GLM_API_KEY=${GLM_API_KEY}
+      
+      # Volcengine API Key (required if using Volcengine models)
+      - VOLCENGINE_API_KEY=${VOLCENGINE_API_KEY}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./config:/app/config
+    depends_on:
+      milvus:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - milvus_network
+    restart: unless-stopped
+
+  # Optional: Milvus web UI (Attu)
+  attu:
+    container_name: milvus-attu
+    image: zilliz/attu:v2.4.8
+    environment:
+      MILVUS_URL: milvus:19530
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "milvus"
+    networks:
+      - milvus_network
+    restart: unless-stopped
+
+volumes:
+  etcd_data:
+  minio_data:
+  milvus_data:
+
+networks:
+  milvus_network:
+    driver: bridge 

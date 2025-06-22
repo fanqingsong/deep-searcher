@@ -1,19 +1,26 @@
-FROM ghcr.io/astral-sh/uv:python3.10-bookworm-slim
+FROM m.daocloud.io/docker.io/library/python:3.10
 
 WORKDIR /app
 
-RUN mkdir -p /tmp/uv-cache /app/data /app/logs
+# Create directories
+RUN mkdir -p /app/data /app/logs
 
-COPY pyproject.toml uv.lock LICENSE README.md ./
+# Configure pip to use Chinese mirror
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
+# Copy all necessary files for installation
+COPY pyproject.toml ./
+COPY LICENSE README.md ./
 COPY deepsearcher/ ./deepsearcher/
+COPY main.py ./
+COPY examples/ ./examples/
 
-RUN uv sync 
-
-COPY . .
+# Install the project in editable mode with all dependencies
+RUN pip install --no-cache-dir -e .
 
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8000/docs || exit 1
+    CMD python -c "import requests; requests.get('http://localhost:8000/docs')"
 
-CMD ["uv", "run", "python", "main.py", "--enable-cors", "true"] 
+CMD ["python", "main.py", "--enable-cors", "true"] 
