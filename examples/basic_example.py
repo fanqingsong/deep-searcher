@@ -1,5 +1,9 @@
 import logging
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 from deepsearcher.offline_loading import load_from_local_files
 from deepsearcher.online_query import query
@@ -11,6 +15,25 @@ httpx_logger.setLevel(logging.WARNING)
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 config = Configuration()  # Customize your config here
+
+# Use SiliconFlow instead of OpenAI since we have the API key available
+config.set_provider_config("llm", "SiliconFlow", {"model": "deepseek-ai/DeepSeek-V3"})
+config.set_provider_config("embedding", "SiliconflowEmbedding", {"model": "BAAI/bge-m3"})
+
+# Use Qdrant in memory mode to avoid external dependencies
+# config.set_provider_config("vector_db", "Qdrant", {
+#     "default_collection": "deepsearcher",
+#     "location": ":memory:"
+# })
+
+# Use Milvus service from docker-compose
+config.set_provider_config("vector_db", "Milvus", {
+    "default_collection": "deepsearcher",
+    "uri": "http://localhost:19530",
+    "token": "root:Milvus",
+    "db": "default"
+})
+
 init_config(config=config)
 
 

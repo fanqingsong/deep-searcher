@@ -1,8 +1,12 @@
 import logging
 import os
+from dotenv import load_dotenv
 from deepsearcher.offline_loading import load_from_local_files, load_from_website
 from deepsearcher.online_query import query
 from deepsearcher.configuration import Configuration, init_config
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Suppress unnecessary logging from third-party libraries
 logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -11,8 +15,15 @@ def main():
     # Step 1: Initialize configuration
     config = Configuration()
 
-    # Configure Vector Database and Docling providers
-    config.set_provider_config("vector_db", "Milvus", {})
+    # Configure providers with proper settings
+    config.set_provider_config("llm", "SiliconFlow", {"model": "deepseek-ai/DeepSeek-V3"})
+    config.set_provider_config("embedding", "SiliconflowEmbedding", {"model": "BAAI/bge-m3"})
+    config.set_provider_config("vector_db", "Milvus", {
+        "default_collection": "deepsearcher",
+        "uri": "http://localhost:19530",
+        "token": "root:Milvus",
+        "db": "default"
+    })
     config.set_provider_config("file_loader", "DoclingLoader", {})
     config.set_provider_config("web_crawler", "DoclingCrawler", {})
 
@@ -20,7 +31,9 @@ def main():
     init_config(config)
 
     # Step 2a: Load data from a local file using DoclingLoader
-    local_file = "your_local_file_or_directory"
+    # local_file = "your_local_file_or_directory"
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    local_file = os.path.join(current_dir, "data/WhatisMilvus.pdf")
     local_collection_name = "DoclingLocalFiles"
     local_collection_description = "Milvus Documents loaded using DoclingLoader"
 

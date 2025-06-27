@@ -60,6 +60,7 @@ Synchronize and install dependencies:
 ```shell
 uv sync
 source .venv/bin/activate
+
 ```
 
 For more detailed development setup and optional dependency installation options, see [CONTRIBUTING.md](CONTRIBUTING.md#development-environment-setup-with-uv).
