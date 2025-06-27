@@ -1,51 +1,29 @@
-llm:
-  provider: "OpenAILLM"
-  config:
-    model: "gpt-4o-mini"
-    api_key: ""  # Will be set via environment variable OPENAI_API_KEY
+provide_settings:
+  llm:
+    provider: "SiliconFlow"
+    config:
+      model: "deepseek-ai/DeepSeek-V3"
 
-  # Uncomment to use other LLM providers
-  # provider: "DeepSeekLLM"
-  # config:
-  #   model: "deepseek-chat"
-  #   api_key: ""  # Will be set via environment variable DEEPSEEK_API_KEY
+  embedding:
+    provider: "SiliconflowEmbedding"
+    config:
+      model: "BAAI/bge-m3"
 
-embedding:
-  provider: "OpenAIEmbedding"
-  config:
-    model: "text-embedding-3-small"
-    api_key: ""  # Will be set via environment variable OPENAI_API_KEY
+  file_loader:
+    provider: "PDFLoader"
+    config: {}
 
-  # Uncomment to use Milvus built-in embedding
-  # provider: "MilvusEmbedding"
-  # config:
-  #   model: "BAAI/bge-base-en-v1.5"
+  web_crawler:
+    provider: "FireCrawlCrawler"
+    config: {}
 
-file_loader:
-  provider: "PDFLoader"
-  config: {}
-
-  # Uncomment to use other file loaders
-  # provider: "UnstructuredLoader"
-  # config: {}
-
-web_crawler:
-  provider: "FireCrawlCrawler"
-  config: {}
-
-  # Uncomment to use other web crawlers
-  # provider: "Crawl4AICrawler"
-  # config: {}
-
-vector_db:
-  provider: "Milvus"
-  config:
-    default_collection: "deepsearcher"
-    uri: "http://milvus:19530"  # Docker service name
-    token: ""
-    db: "default"
-    user: ""
-    password: ""
+  vector_db:
+    provider: "Milvus"
+    config:
+      default_collection: "deepsearcher"
+      uri: "http://milvus:19530"  # Docker service name
+      token: "root:Milvus"
+      db: "default"
 
 query_settings:
   max_iter: 3

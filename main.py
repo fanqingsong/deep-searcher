@@ -1,4 +1,5 @@
 import argparse
+import os
 from typing import Dict, List, Union
 
 import uvicorn
@@ -12,7 +13,23 @@ from deepsearcher.online_query import query
 
 app = FastAPI()
 
-config = Configuration()
+# Use docker-config.yaml when running in container, fallback to default
+if os.path.exists("/app/docker-config.yaml"):
+    config = Configuration("/app/docker-config.yaml")
+else:
+    config = Configuration()
+    # Auto-configure providers at startup when not using docker-config.yaml
+    # API keys will be read from environment variables (loaded from .env file in docker-compose)
+    config.set_provider_config("llm", "SiliconFlow", {"model": "deepseek-ai/DeepSeek-V3"})
+    config.set_provider_config("embedding", "SiliconflowEmbedding", {"model": "BAAI/bge-m3"})
+    config.set_provider_config("vector_db", "Milvus", {
+        "default_collection": "deepsearcher",
+        "uri": "http://milvus:19530",  # Use container name when running in docker-compose
+        "token": "root:Milvus",
+        "db": "default"
+    })
+    config.set_provider_config("web_crawler", "DoclingCrawler", {})
+
 
 init_config(config)
 
