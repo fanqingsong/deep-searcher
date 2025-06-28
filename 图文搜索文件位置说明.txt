@@ -1,0 +1,3 @@
+
+📁 图文搜索相关文件已移动到: multimodal_search_demo/ 目录
+详细使用说明请查看: multimodal_search_demo/README.md
