@@ -20,6 +20,7 @@ services:
       retries: 3
     networks:
       - milvus_network
+    restart: unless-stopped
 
   minio:
     container_name: milvus-minio
@@ -40,6 +41,7 @@ services:
       retries: 3
     networks:
       - milvus_network
+    restart: unless-stopped
 
   # Milvus standalone
   milvus:
@@ -67,6 +69,7 @@ services:
       - "minio"
     networks:
       - milvus_network
+    restart: unless-stopped
 
   # DeepSearcher application
   deep-searcher:
